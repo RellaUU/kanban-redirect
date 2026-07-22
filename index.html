@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>RellaUU 的个人看板</title>
+<style>
+  body{font-family:-apple-system,"PingFang SC","Microsoft YaHei",sans-serif;display:flex;align-items:center;justify-content:center;height:100vh;margin:0;background:#F7F2E8;color:#8a7c63;font-size:15px;letter-spacing:1px}
+</style>
+</head>
+<body>
+  <div id="msg">正在跳转到 RellaUU 的个人看板…</div>
+  <script>var REDIRECT_TARGET="__REDIRECT_TARGET__";</script>
+  <script>
+    (function(){
+      var u = REDIRECT_TARGET;
+      if (u && u.indexOf('http') === 0) { location.replace(u); }
+      else { document.getElementById('msg').textContent = '看板地址准备中，请稍后刷新本页。'; }
+    })();
+  </script>
+</body>
+</html>
