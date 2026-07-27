@@ -184,6 +184,7 @@ header .sub{position:relative;color:var(--muted);font-size:12.5px;margin-top:8px
 /* 板块级入口链接 */
 .hotlink{display:inline-flex;align-items:center;gap:4px;font-size:11.5px;color:var(--accent);background:var(--accent-soft);border:1px solid var(--line);padding:4px 10px;border-radius:14px;margin:0 6px 10px 0;cursor:pointer;text-decoration:none;transition:.2s}
 .hotlink:hover{background:var(--accent);color:#fff}
+.plabel{font-size:11px;color:var(--muted);letter-spacing:1px;margin:2px 0 4px}
 </style>
 </head>
 <body>
@@ -852,7 +853,21 @@ function renderPanels(){
         links.appendChild(a);
       });
       c.appendChild(links);
-      const disc = document.createElement('div'); disc.className = 'pdisc'; disc.textContent = '小白友好解读 · 点卡片看机构深度分析，点💬看股友实时讨论 · 仅供学习，不构成投资建议';
+      // 小白新手专区：精选易懂的投资学习入口（非个股建议，纯学习）
+      const blabel = document.createElement('div'); blabel.className = 'plabel'; blabel.textContent = '📚 新手必看 · 易懂的投资学习（纯科普，不构成建议）';
+      c.appendChild(blabel);
+      const blinks = document.createElement('div');
+      [['📘 东方财富学院','https://edu.eastmoney.com/'],
+       ['🏛 上交所投教(官方)','https://edu.sse.com.cn/'],
+       ['🥚 蛋卷基金定投','https://danjuanfunds.com/'],
+       ['🎮 模拟炒股练手','https://mncg.eastmoney.com/'],
+       ['🌐 雪球社区','https://xueqiu.com/'],
+       ['🛡 中国投资者网','https://www.investor.org.cn/']].forEach(([t,u]) => {
+        const a = document.createElement('a'); a.className = 'hotlink'; a.href = u; a.target = '_blank'; a.rel = 'noopener'; a.textContent = t;
+        blinks.appendChild(a);
+      });
+      c.appendChild(blinks);
+      const disc = document.createElement('div'); disc.className = 'pdisc'; disc.textContent = '小白友好解读 · 点卡片看机构深度分析，点💬看股友实时讨论 · 新手先学再投，闲钱投资、不借钱、不追高';
       c.appendChild(disc);
       const box = document.createElement('div'); box.className = 'pitems';
       data.items.forEach((it, idx) => box.appendChild(makeStockCard(id, idx, it)));
