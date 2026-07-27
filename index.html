@@ -684,12 +684,39 @@ const pl = document.getElementById('panelList');
 let stockData = null; // 实时行情缓存（数组，按 STOCK_CODES 顺序）
 let stockMap = {};    // 实时行情缓存（按 code 索引，含换手率/涨跌%）
 
+// 挑一个高质量英文嗓音（优先云端/自然嗓音，避免机械本地音）
+let _enVoice = null;
+function pickEnglishVoice(){
+  if (!('speechSynthesis' in window)) return null;
+  const vs = speechSynthesis.getVoices() || [];
+  if (!vs.length) return null;
+  const prefer = ['Google US English','Microsoft Aria Online (Natural)','Microsoft Aria','Samantha','Daniel','Google UK English','Microsoft David','Microsoft Zira','Alex','Victoria'];
+  for (const name of prefer){
+    const v = vs.find(x => x.name && x.name.indexOf(name) >= 0 && x.lang && x.lang.toLowerCase().indexOf('en') === 0);
+    if (v) return v;
+  }
+  const cloud = vs.find(x => x.lang && x.lang.toLowerCase().indexOf('en') === 0 && x.localService === false);
+  if (cloud) return cloud;
+  return vs.find(x => x.lang && x.lang.toLowerCase().indexOf('en') === 0) || null;
+}
+function ensureVoice(){
+  if (_enVoice) return _enVoice;
+  _enVoice = pickEnglishVoice();
+  return _enVoice;
+}
+if ('speechSynthesis' in window){
+  ensureVoice();
+  speechSynthesis.onvoiceschanged = () => { _enVoice = null; ensureVoice(); };
+}
 function speak(text, lang){
   try{
     if (!('speechSynthesis' in window)) return;
     speechSynthesis.cancel();
     const u = new SpeechSynthesisUtterance(text);
-    u.lang = lang || 'en-US'; u.rate = 0.92; u.pitch = 1;
+    const v = ensureVoice();
+    if (v) u.voice = v;
+    u.lang = (v && v.lang) || lang || 'en-US';
+    u.rate = 0.9; u.pitch = 1; u.volume = 1;
     speechSynthesis.speak(u);
   }catch(e){}
 }
