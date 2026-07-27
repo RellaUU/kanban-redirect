@@ -1,22 +1,889 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
 <head>
-<meta charset="utf-8">
+<meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>RellaUU 的个人看板</title>
+<title>RellaUU的个人看板</title>
 <style>
-  body{font-family:-apple-system,"PingFang SC","Microsoft YaHei",sans-serif;display:flex;align-items:center;justify-content:center;height:100vh;margin:0;background:#F7F2E8;color:#8a7c63;font-size:15px;letter-spacing:1px}
+:root{
+  --bg:#F5F1E8; --panel:#FBF8F1; --ink:#3A332A; --muted:#9A8F7C;
+  --line:#E3D9C4; --accent:#B08D57; --accent-soft:#EFE4CF; --radius:14px;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:-apple-system,"PingFang SC","Microsoft YaHei",sans-serif;background:var(--bg);color:var(--ink);line-height:1.7;-webkit-font-smoothing:antialiased}
+.serif{font-family:Georgia,"Songti SC","STSong",serif}
+.brand{font-family:'Didot','Baskerville',"Source Han Sans SC","Noto Sans CJK SC","PingFang SC",sans-serif;font-weight:300;letter-spacing:1px;white-space:nowrap}
+.en{font-family:'Didot','Baskerville','Hoefler Text',Georgia,serif;font-style:italic;letter-spacing:3px;font-weight:400}
+
+/* 登录遮罩 */
+#loginOverlay{position:fixed;inset:0;background:radial-gradient(900px 500px at 50% 20%,#F7F2E8,#EDE6D6);display:flex;align-items:center;justify-content:center;z-index:50;padding:20px}
+.loginCard{background:var(--panel);border:1px solid var(--line);border-radius:20px;padding:40px 34px;width:100%;max-width:340px;text-align:center;box-shadow:0 20px 50px rgba(80,60,30,.12)}
+.loginCard .star{font-size:20px;color:var(--accent);margin-bottom:4px;opacity:.8}
+.loginCard h1{font-size:24px;letter-spacing:2px}
+.loginCard .sub{color:var(--muted);font-size:12px;letter-spacing:2px;margin:8px 0 22px}
+.loginCard input[type=text],.loginCard input[type=password]{width:100%;padding:12px 14px;border:1px solid var(--line);border-radius:10px;background:#fff;font-size:15px;text-align:center;letter-spacing:2px;color:var(--ink);outline:none;margin-top:12px}
+.loginCard input:focus{border-color:var(--accent)}
+.loginCard button{margin-top:16px;width:100%;padding:12px;border:none;border-radius:10px;background:var(--accent);color:#fff;font-size:15px;letter-spacing:3px;cursor:pointer;transition:.2s}
+.loginCard button:hover{background:#9c7a47}
+.remember{margin-top:14px;font-size:12px;color:var(--muted);display:flex;align-items:center;justify-content:center;gap:6px}
+.remember input{accent-color:var(--accent)}
+.loginErr{color:#b5524a;font-size:12px;min-height:16px;margin-top:10px}
+.switch{margin-top:14px;font-size:12px;color:var(--accent);cursor:pointer;letter-spacing:1px}
+.netnote{font-size:11px;color:#b9ad97;margin-top:10px;min-height:14px}
+.modesel{margin-top:20px}
+.mlabel{font-size:11px;color:var(--muted);letter-spacing:3px;margin-bottom:8px}
+.mopts{display:flex;gap:10px}
+.mopt{flex:1;padding:11px 0;border:1px solid var(--line);background:#fff;border-radius:10px;font-size:14px;letter-spacing:3px;color:var(--muted);cursor:pointer;transition:.2s;font-family:inherit}
+.mopt.active{background:var(--accent);color:#fff;border-color:var(--accent)}
+.mopt:hover{border-color:var(--accent)}
+
+header{position:relative;overflow:hidden;text-align:center;padding:46px 26px 30px}
+header svg{position:absolute;inset:0;width:100%;height:100%;opacity:.5;pointer-events:none}
+header h1{position:relative;font-size:27px;letter-spacing:2px}
+header .headtop{position:relative;display:flex;align-items:baseline;justify-content:center;gap:14px;flex-wrap:wrap}
+header .topdate{font-size:13px;color:var(--muted);letter-spacing:2px;white-space:nowrap}
+header .sub{position:relative;color:var(--muted);font-size:12.5px;margin-top:8px;letter-spacing:3px}
+.wrap{max-width:1080px;margin:0 auto;padding:6px 24px 60px}
+
+/* 桌面双栏排版 */
+.layout{display:block}
+@media(min-width:900px){
+  .layout{display:grid;grid-template-columns:420px 1fr;gap:24px;align-items:start}
+}
+.card{background:var(--panel);border:1px solid var(--line);border-radius:var(--radius);padding:26px;margin-bottom:22px;box-shadow:0 10px 30px rgba(120,95,50,.06);animation:fadeUp .6s ease both}
+.layout>.card:nth-child(2){animation-delay:.16s}
+.card h2{font-size:19px;letter-spacing:3px;text-align:center;display:flex;align-items:center;justify-content:center;gap:10px}
+.card .h2sub{color:var(--muted);font-size:12px;margin:6px 0 18px;text-align:center;letter-spacing:1px}
+.zodiac{font-size:18px;color:var(--accent)}
+.divider{width:46px;height:1px;background:var(--accent);margin:0 auto 18px;opacity:.6;position:relative}
+.divider::after{content:"\2726";position:absolute;top:-10px;left:50%;transform:translateX(-50%);background:var(--panel);padding:0 6px;color:var(--accent);font-size:11px}
+
+/* 圆形进度 */
+.ring-wrap{position:relative;width:96px;height:96px;margin:6px auto 20px}
+.ring{transform:rotate(-90deg);width:96px;height:96px}
+.ring-bg{fill:none;stroke:var(--accent-soft);stroke-width:7}
+.ring-fg{fill:none;stroke:url(#goldGrad);stroke-width:7;stroke-linecap:round;transition:stroke-dashoffset .4s ease}
+.ring-label{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;line-height:1.1}
+.ring-label b{font-size:24px;color:var(--ink);font-family:Georgia,serif}
+.ring-label span{font-size:12px;color:var(--muted);margin-top:2px}
+.ring-label em{font-size:10px;color:var(--muted);font-style:normal;letter-spacing:2px;margin-top:4px}
+.ring-wrap.full{filter:drop-shadow(0 0 7px rgba(176,141,87,.55))}
+
+/* 待办分组 */
+.todo-groups{margin-top:4px}
+.tabs{display:flex;gap:8px;margin:2px 2px 16px}
+.tab{flex:1;padding:9px 0;border:1px solid var(--line);background:#fff;border-radius:20px;font-size:13px;letter-spacing:3px;color:var(--muted);cursor:pointer;transition:.2s;font-family:inherit}
+.tab.active{background:var(--accent-soft);color:var(--accent);border-color:var(--accent)}
+.tgroup{display:none}
+.tgroup.active{display:block}
+.ghead{display:flex;align-items:center;gap:10px;font-size:13px;letter-spacing:4px;color:var(--accent);margin:18px 2px 10px}
+.ghead::before,.ghead::after{content:"";flex:1;height:1px;background:var(--line)}
+.gcount{font-family:Georgia,serif;color:var(--muted);font-size:12px;letter-spacing:0}
+.todo{display:flex;align-items:flex-start;gap:12px;padding:12px 4px;border-bottom:1px solid var(--line)}
+.todo:last-child{border-bottom:none}
+.num{font-family:Georgia,serif;font-size:14px;color:var(--accent);width:22px;flex:0 0 auto;margin-top:1px}
+.box{width:20px;height:20px;border:2px solid var(--accent);border-radius:50%;flex:0 0 auto;margin-top:2px;cursor:pointer;position:relative;transition:.2s}
+.todo.done .box{background:var(--accent)}
+.todo.done .box:after{content:"";position:absolute;left:5px;top:1px;width:5px;height:9px;border:solid #FBF8F1;border-width:0 2px 2px 0;transform:rotate(45deg)}
+.todo .t{font-size:15px;flex:1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.todo.done .t{color:var(--muted);text-decoration:line-through}
+.tag{font-size:11px;color:var(--accent);background:var(--accent-soft);padding:2px 9px;border-radius:20px;white-space:nowrap;flex:0 0 auto}
+.outoggle{width:26px;height:22px;flex:0 0 auto;border:1px solid var(--line);background:none;color:var(--accent);border-radius:14px;font-size:12px;cursor:pointer;transition:.2s;letter-spacing:1px;margin-top:1px}
+.outoggle:hover{background:var(--accent-soft)}
+.del{color:var(--muted);cursor:pointer;font-size:16px;flex:0 0 auto;opacity:.5;transition:.2s;background:none;border:none;padding:0 2px;margin-top:2px}
+.del:hover{opacity:1;color:#b5524a}
+/* 星期限定项：今天不做，置灰展示 */
+.todo.muted{opacity:.5}
+.todo.muted .t{color:var(--muted)}
+.todo.muted .box{border-color:var(--line);cursor:not-allowed;background:none}
+.todo.muted .box:after{display:none}
+.todo.muted .outoggle{display:none}
+.notoday{font-size:10px;color:#9A8F7C;background:#efe9dc;padding:2px 9px;border-radius:20px;white-space:nowrap;flex:0 0 auto;letter-spacing:1px}
+
+.addbar{margin-top:18px;text-align:center}
+.addbtn{background:none;border:1px dashed var(--accent);color:var(--accent);padding:9px 20px;border-radius:24px;font-size:14px;letter-spacing:2px;cursor:pointer;transition:.2s}
+.addbtn:hover{background:var(--accent-soft)}
+.addform{margin-top:14px;display:none;gap:8px;align-items:center;justify-content:center;flex-wrap:wrap}
+.addform input{flex:1;min-width:160px;padding:10px 12px;border:1px solid var(--line);border-radius:9px;background:#fff;font-size:14px;color:var(--ink);outline:none}
+.addform input:focus{border-color:var(--accent)}
+.addform .ok{background:var(--accent);color:#fff;border:none;padding:10px 18px;border-radius:9px;cursor:pointer;letter-spacing:2px}
+.addform .no{background:none;border:1px solid var(--line);color:var(--muted);padding:10px 16px;border-radius:9px;cursor:pointer}
+
+/* 板块 */
+#panelList{display:grid;grid-template-columns:1fr;gap:14px}
+@media(min-width:900px){ #panelList{grid-template-columns:1fr 1fr} }
+.panel{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:18px;box-shadow:0 6px 18px rgba(120,95,50,.05)}
+.panel h3{font-size:15px;display:flex;align-items:center;gap:8px;margin-bottom:9px;letter-spacing:1px;flex-wrap:wrap}
+.panel .ic{color:var(--accent)}
+.pctrl{margin-left:auto;display:flex;gap:6px;flex:0 0 auto}
+.pctrl button{background:none;border:1px solid var(--line);color:var(--accent);width:24px;height:24px;border-radius:50%;cursor:pointer;font-size:13px;line-height:1;display:flex;align-items:center;justify-content:center;transition:.2s}
+.pctrl button:hover{background:var(--accent-soft)}
+.pupdated{font-size:11px;color:var(--muted);margin:-4px 0 8px;letter-spacing:1px}
+.pupdated::before{content:"\2726 ";color:var(--accent);opacity:.7}
+.pitems{display:flex;flex-direction:column}
+.pitem{display:flex;align-items:flex-start;gap:8px;padding:7px 6px;border-radius:8px;transition:.15s}
+.pitem:hover{background:var(--accent-soft)}
+.ptext{flex:1;font-size:13.5px;color:#6B6253;outline:none;line-height:1.6;min-height:20px;word-break:break-word}
+.ptext:focus{color:var(--ink)}
+.pdel{flex:0 0 auto;color:var(--muted);background:none;border:none;cursor:pointer;font-size:17px;opacity:0;transition:.2s;padding:0 2px;line-height:1}
+.pitem:hover .pdel{opacity:.55}
+.pdel:hover{opacity:1;color:#b5524a}
+
+.note{font-size:11px;color:var(--muted);margin-top:14px;text-align:center;letter-spacing:1px}
+.logout{position:fixed;top:14px;right:16px;font-size:12px;color:var(--muted);background:rgba(255,255,255,.6);border:1px solid var(--line);padding:5px 12px;border-radius:20px;cursor:pointer;z-index:40}
+@keyframes fadeUp{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
+@media(max-width:480px){header h1,.loginCard h1{font-size:20px;letter-spacing:1px}}
+
+/* 英语单词卡 */
+.words{display:grid;grid-template-columns:1fr;gap:10px}
+@media(min-width:640px){ .words{grid-template-columns:1fr 1fr} }
+.word{background:var(--accent-soft);border-radius:10px;padding:11px 13px}
+.wtop{display:flex;align-items:center;gap:8px}
+.wword{font-size:15px;font-weight:600;color:var(--accent);letter-spacing:.5px}
+.wph{font-size:12px;color:var(--muted);font-family:Georgia,serif}
+.wspk{border:none;background:#fff;border-radius:50%;width:24px;height:24px;cursor:pointer;font-size:12px;margin-left:auto;box-shadow:0 1px 3px rgba(0,0,0,.08);transition:.2s}
+.wspk:hover{background:var(--accent);transform:scale(1.06)}
+.wmean{font-size:13px;color:var(--ink);margin-top:4px}
+.wex{font-size:12.5px;color:#6B6253;margin-top:3px;font-style:italic}
+.wsc{font-size:11.5px;color:var(--muted);margin-top:4px;line-height:1.5}
+.pall{margin:2px 0 10px;background:var(--accent);color:#fff;border:none;padding:7px 14px;border-radius:18px;font-size:12px;letter-spacing:1px;cursor:pointer;transition:.2s}
+.pall:hover{background:#9c7a47}
+/* 股票实时行情 */
+.stocklive{background:#FBF1E2;border:1px solid var(--line);border-radius:10px;padding:10px 12px;margin-bottom:10px}
+.livetitle{font-size:11px;color:var(--muted);letter-spacing:1px;margin-bottom:7px}
+.stockrow{display:flex;flex-wrap:wrap;gap:7px}
+.stk{font-size:12px;padding:3px 9px;border-radius:16px;background:#fff;border:1px solid var(--line);white-space:nowrap}
+.stk b{font-family:Georgia,serif}
+.stk.up{color:#c0392b} /* 涨 · 红 */
+.stk.down{color:#1e8449} /* 跌 · 绿 */
+.pdisc{font-size:10.5px;color:#b9ad97;margin:-2px 0 8px;letter-spacing:.5px}
 </style>
 </head>
 <body>
-  <div id="msg">正在跳转到 RellaUU 的个人看板…</div>
-  <script>var REDIRECT_TARGET="https://rellauu-kanban.rellauu.workers.dev";</script>
-  <script>
-    (function(){
-      var u = REDIRECT_TARGET;
-      if (u && u.indexOf('http') === 0) { location.replace(u); }
-      else { document.getElementById('msg').textContent = '看板地址准备中，请稍后刷新本页。'; }
-    })();
-  </script>
+
+<div id="loginOverlay">
+  <div class="loginCard">
+    <div class="star">✶</div>
+    <h1 class="brand">RellaUU的个人看板</h1>
+    <div class="sub"><span class="en">STAR JOURNEY</span></div>
+    <div class="modesel" id="modeSel">
+      <div class="mlabel">当前状态</div>
+      <div class="mopts">
+        <button type="button" class="mopt" data-mode="out">出 门</button>
+        <button type="button" class="mopt" data-mode="home">在 家</button>
+      </div>
+    </div>
+    <input type="password" id="guardInput" placeholder="访问口令（轻保护）" maxlength="20" inputmode="numeric" autocomplete="off">
+    <button id="enterBtn">进 入 看 板</button>
+    <div class="loginErr" id="loginErr"></div>
+    <div class="netnote" id="netnote">纯本地版 · 数据保存在本机浏览器</div>
+  </div>
+</div>
+
+<button class="logout" id="logoutBtn" style="display:none">退出</button>
+
+<header>
+<svg viewBox="0 0 800 150" preserveAspectRatio="xMidYMid slice" xmlns="http://www.w3.org/2000/svg">
+ <g fill="#B08D57">
+  <circle cx="90" cy="60" r="1.8"/><circle cx="180" cy="40" r="1.4"/><circle cx="270" cy="70" r="1.6"/>
+  <circle cx="360" cy="35" r="1.3"/><circle cx="470" cy="65" r="1.7"/><circle cx="560" cy="45" r="1.4"/>
+  <circle cx="660" cy="75" r="1.5"/><circle cx="740" cy="50" r="1.3"/><circle cx="410" cy="110" r="1.3"/>
+  <circle cx="610" cy="115" r="1.4"/>
+ </g>
+ <g stroke="#B08D57" stroke-width="0.7" opacity="0.45" fill="none">
+  <polyline points="90,60 180,40 270,70 360,35 470,65 560,45 660,75 740,50"/>
+  <polyline points="270,70 410,110 610,115"/>
+ </g>
+</svg>
+<div class="headtop">
+  <h1 class="brand">RellaUU的个人看板</h1>
+  <span class="topdate" id="date"></span>
+</div>
+<div class="sub"><span class="en">STAR JOURNEY</span> · 每日待办与灵感</div>
+</header>
+
+<div class="wrap">
+ <div class="layout">
+   <section class="card">
+     <h2 class="serif"><span class="zodiac">✶</span> 每日待办</h2>
+     <div class="divider"></div>
+     <div class="h2sub">勾选自动记录 · 可切换出门 / 在家</div>
+     <div class="ring-wrap">
+       <svg class="ring" viewBox="0 0 100 100">
+         <defs><linearGradient id="goldGrad" x1="0" y1="0" x2="1" y2="1">
+           <stop offset="0" stop-color="#C9A66B"/><stop offset="1" stop-color="#B08D57"/>
+         </linearGradient></defs>
+         <circle class="ring-bg" cx="50" cy="50" r="44"/>
+         <circle class="ring-fg" cx="50" cy="50" r="44" stroke-dasharray="276.46" stroke-dashoffset="276.46"/>
+       </svg>
+       <div class="ring-label"><b id="doneN">0</b><span>/ <span id="totalN">16</span></span><em>今日完成</em></div>
+     </div>
+     <div class="tabs" id="todoTabs">
+       <button class="tab" data-v="out">出 门 <span id="tabOut">0/0</span></button>
+       <button class="tab" data-v="home">在 家 <span id="tabIn">0/0</span></button>
+     </div>
+     <div class="todo-groups">
+       <div class="tgroup" data-g="out">
+         <div class="ghead"><span>出 门</span><span class="gcount" id="outCnt">0/0</span></div>
+         <div id="todoOut"></div>
+       </div>
+       <div class="tgroup" data-g="home">
+         <div class="ghead"><span>不 出 门</span><span class="gcount" id="inCnt">0/0</span></div>
+         <div id="todoIn"></div>
+       </div>
+     </div>
+     <div class="addbar"><button class="addbtn" id="addBtn">＋ 添加待办</button></div>
+     <div class="addform" id="addForm">
+       <input id="addInput" type="text" placeholder="输入新的待办事项…" maxlength="40">
+       <button class="ok" id="addOk">添加</button>
+       <button class="no" id="addNo">取消</button>
+     </div>
+   </section>
+
+   <section class="card">
+     <h2 class="serif"><span class="zodiac">☾</span> 灵感与资讯</h2>
+     <div class="divider"></div>
+     <div class="h2sub">6 个内容板块 · 点击文字即可编辑</div>
+     <div id="panelList"></div>
+   </section>
+ </div>
+
+ <div class="note" id="footnote">纯本地版 · 无需联网 · 数据保存在当前浏览器（换设备/换浏览器不共享）</div>
+</div>
+
+<script>
+// ===== RellaUU 个人看板 · 纯静态版（无后端 · 本地存储 · 无需 VPN）=====
+const GUARD = '1226'; // 轻保护口令
+
+// ---------- 状态 ----------
+let board = null;
+let viewMode = localStorage.getItem('kanban_mode') || 'home'; // 'out' | 'home'
+
+// ---------- 完成音效：掉金币 ----------
+let audioCtx = null;
+function playCoin(){
+  try{
+    const a = new Audio('audio/diaoluo_da.mp3');
+    a.volume = 0.9;
+    const p = a.play();
+    if (p && p.catch) p.catch(() => synthCoin());
+    return;
+  }catch(e){ synthCoin(); }
+}
+function synthCoin(){
+  try{
+    audioCtx = audioCtx || new (window.AudioContext || window.webkitAudioContext)();
+    if (audioCtx.state === 'suspended') audioCtx.resume();
+    const now = audioCtx.currentTime;
+    const notes = [1046.5, 1568];
+    notes.forEach((f, i) => {
+      const t = now + i * 0.085;
+      const o1 = audioCtx.createOscillator(), g1 = audioCtx.createGain();
+      const o2 = audioCtx.createOscillator(), g2 = audioCtx.createGain();
+      o1.type = 'sine'; o1.frequency.value = f;
+      o2.type = 'sine'; o2.frequency.value = f * 2;
+      g1.gain.setValueAtTime(0, t);
+      g1.gain.linearRampToValueAtTime(0.18, t + 0.004);
+      g1.gain.exponentialRampToValueAtTime(0.0005, t + 0.22);
+      g2.gain.setValueAtTime(0, t);
+      g2.gain.linearRampToValueAtTime(0.06, t + 0.004);
+      g2.gain.exponentialRampToValueAtTime(0.0004, t + 0.18);
+      o1.connect(g1).connect(audioCtx.destination);
+      o2.connect(g2).connect(audioCtx.destination);
+      o1.start(t); o1.stop(t + 0.24);
+      o2.start(t); o2.stop(t + 0.20);
+    });
+  }catch(e){}
+}
+
+// ---------- 日期 ----------
+const today = new Date();
+const ds = today.getFullYear() + '-' + String(today.getMonth()+1).padStart(2,'0') + '-' + String(today.getDate()).padStart(2,'0');
+const dt = document.getElementById('date');
+if (dt) dt.textContent = ds;
+
+// ---------- 固定待办（含出门/在家分类）----------
+const DEFAULT_TODOS = [
+  {t:"醒来秤体重", tag:"晨间", out:true},
+  {t:"第一顿后吃一颗叶酸", tag:"晨间", out:true},
+  {t:"饭后休息 1 小时看剧", tag:"午间", out:false},
+  {t:"上课 3 小时", tag:"日间", out:false},
+  {t:"更新微信朋友圈 5–10 篇", tag:"日间", out:true},
+  {t:"第二顿饭后半小时补铁", tag:"午间", out:false},
+  {t:"不定时查阅股票（9:30–15:00）", tag:"日间", out:true},
+  {t:"下午艾灸两次", tag:"", out:false, days:[1,3,5]},
+  {t:"出门散步半小时以上", tag:"傍晚", out:false},
+  {t:"阅读书籍 2 小时", tag:"晚间", out:false},
+  {t:"处理工作 4 小时", tag:"日间", out:false},
+  {t:"晚上九点前泡脚", tag:"", out:false, days:[2,4,6]},
+  {t:"更新抖音情感号一篇", tag:"晚间", out:true},
+  {t:"睡前一小时吃镁", tag:"睡前", out:true},
+  {t:"维持视频素材累积", tag:"全天", out:true},
+  {t:"打卡小运动半小时", tag:"全天", out:false},
+  {t:"冥想半小时并记录过程", tag:"静心", out:true},
+  // —— 在家额外纳入：把上面 8 条出门事项也放进「在家」清单 ——
+  {t:"醒来秤体重", tag:"晨间", out:false},
+  {t:"第一顿后吃一颗叶酸", tag:"晨间", out:false},
+  {t:"更新微信朋友圈 5–10 篇", tag:"日间", out:false},
+  {t:"不定时查阅股票（9:30–15:00）", tag:"日间", out:false},
+  {t:"更新抖音情感号一篇", tag:"晚间", out:false},
+  {t:"睡前一小时吃镁", tag:"睡前", out:false},
+  {t:"维持视频素材累积", tag:"全天", out:false},
+  {t:"冥想半小时并记录过程", tag:"静心", out:false}
+];
+
+function visibleToday(o){
+  if (o.days && o.days.length) return o.days.includes(today.getDay());
+  return true;
+}
+
+// ---------- 板块灵感库（内置高质量内容，刷新可换一批；英语为结构化单词）----------
+const PANEL_LIB = {
+  douyin: { icon:"▶", title:"抖音 · 情感视频选题灵感", items:[
+    "深夜电台体 · 关灯只留一盏暖光，念『我们没说出口的那句晚安』，BGM 用环境白噪",
+    "错位蒙太奇 · 同一句『我很好』，cut 成出租屋 / 天台 / 医院三个场景，最后定格在空椅子",
+    "城市夜行 vlog · 末班地铁加便利店关东煮，旁白写『这座城很吵，但我很轻』",
+    "物件叙事 · 一只旧打火机、一张过期电影票，带出一段没说完的话",
+    "留白结尾 · 不解释结局，3 秒空镜加字幕『后来我学会了沉默』",
+    "逆光剪影 · 背对镜头走远，只用脚步声和一句『走了』收尾",
+    "第一视角独白 · 对着镜头说『今天，我又把想说的话咽了回去』",
+    "对比蒙太奇 · 去年今天的你对比现在的你，字幕『时间没说话，却什么都改了』",
+    "雨声疗愈 · 窗边雨夜加手写一封信，不寄出，念给旧时光听",
+    "电梯独白 · 在回家路上突然红了眼眶，10 秒长镜不切",
+    "翻聊天记录 · 快速掠过又停在某句，配『原来最远的，是已读不回』",
+    "旧歌新唱 · 用吉他清唱一首老情歌，字幕写你是哪一年循环过它",
+    "备忘录朗读 · 读一段写给自己却没发出去的狠话或软话",
+    "公交车窗景 · 把脸贴在玻璃上，看路灯拉成线，旁白『我在追赶什么』",
+    "分手物品 · 打包一件对方落下的东西，轻轻放门口，门铃不按",
+    "影子戏 · 只用台灯和墙上的影子演一段告别",
+    "早餐独白 · 一个人煮咖啡，念『两个人的习惯，要多久才能改回一个人』",
+    "深夜便利店 · 关东煮的热气加一句『长大就是把委屈就着饭吃了』",
+    "旧照片翻页 · 每张停留 2 秒，最后一张是空白，字幕『后面的故事，我还没敢拍』",
+    "便签墙 · 把写满心事的便利贴一张张撕下丢进垃圾桶，配一声轻叹"
+  ]},
+  xhs: { icon:"❀", title:"小红书 · 每日热门主题", items:[
+    "钝感力练习 · 把『他是不是讨厌我』的脑内小剧场一键静音",
+    "一个人住的第 N 天 · 用暖光加香薰加一本摊开的书，把出租屋养出『家』的气味",
+    "情绪断舍离 · 删掉那几个让你半夜失眠的对话框，截图留念再删",
+    "周末充电清单 · 看展加散步加不回工作消息（附手绘路线）",
+    "自我对话日记 · 今天我对自己说了一句好话：『你已经很努力了』",
+    "低物欲的一周 · 不买新衣，把旧衣服穿出三种搭法",
+    "独处仪式感 · 周五晚泡澡加面膜加一部老电影，手机静音",
+    "允许自己丧 · 今天没动力就躺着，不责怪不打卡，休息也是进度",
+    "情绪记账本 · 记录每次崩溃的诱因，月底发现八成是没睡好",
+    "5 分钟正念 · 等电梯时数呼吸，把焦虑摁回肚子里",
+    "朋友圈分组实验 · 只发给自己看的那条，是写给未来的信",
+    "戒掉『应该』 · 把『我应该更优秀』换成『我现在这样就够』",
+    "数字极简 · 取关 30 个让你焦虑的账号，信息流突然安静",
+    "身体诚实法 · 失眠就起来写，不强迫睡，和黑夜和解",
+    "小确幸收集 · 今天的三件好事：晒到的太阳、好吃的饭、一个微笑",
+    "边界感练习 · 对消耗你的人说『这次我先照顾自己』",
+    "复盘不内耗 · 写『今天我做对的一件事』，而不是只盯错",
+    "感官重启 · 赤脚踩草地、闻雨后泥土，把麻木的神经唤醒",
+    "给三年后的信 · 写『别急，你当时担心的，现在都过去了』",
+    "今晚允许 · 允许哭、允许不想说话、允许明天再说"
+  ]},
+  emotion: { icon:"✎", title:"情感 · 直击人心的短句", items:[
+    "你是我未完待续的章节。",
+    "后来啊，风很自由，你也很。",
+    "有些再见，是再也不见。",
+    "我藏起来的不是脾气，是不想被看穿的委屈。",
+    "成年人的体面，是连崩溃都挑时间。",
+    "我们都在用『没事』，敷衍所有『怎么了』。",
+    "遗憾是，明明还喜欢，却连问候都要排练。",
+    "有些人只适合住在回忆里，走出来就失真。",
+    "我把想念调成静音，怕它吵到你新的生活。",
+    "爱是常觉亏欠，不爱是常觉亏。",
+    "最深的孤独，是明明在人群里，却无人可说『我累了』。",
+    "你把温柔给了世界，却把脾气留给了最亲的人。",
+    "懂事的人，连难过都选在没人的时候。",
+    "原来『放下』不是忘记，是想起时不再皱眉。",
+    "我们终其一生，都在和童年的自己和解。",
+    "有些关心，迟到太久，就变成打扰。",
+    "你以为的『为你好』，有时是我的枷锁。",
+    "真正的安全感，是一个人也能把日子过稳。",
+    "别用沉默惩罚爱你的人，他们读不懂你的潜台词。",
+    "思念这种病，自愈不了，只能靠时间稀释。",
+    "我们都在扮演大人，偶尔才敢做回小孩。",
+    "最好的告别，是没有怨，只有一句『保重』。",
+    "你把心事写进备忘录，却从不敢点开那个人。",
+    "爱错人不可怕，可怕的是为他改掉了自己。",
+    "成年人的分手，往往没有争吵，只有沉默的疏离。",
+    "你不是不够好，只是没遇到同频的人。",
+    "孤独不是没人陪，是心里的话没有耳朵。",
+    "后来我明白，懂事是哭给自己听，笑给世界看。",
+    "有些人出现在你生命里，只为教你学会放手。",
+    "愿你我，都被温柔以待；若不能，至少自己待自己温柔。"
+  ]},
+  stock: { icon:"↗", title:"股票 · 龙头走向与盘面", items:[
+    "贵州茅台 · 高端白酒龙头，品牌护城河极深，回调看量能，长线逻辑未破。",
+    "宁德时代 · 动力电池一哥，出海与储能双线，关注上游锂价与产能利用率。",
+    "比亚迪 · 整车加电池垂直整合，全球化提速，留意海外交付节奏与新车型催化。",
+    "招商银行 · 零售标杆，资产质量稳健，息差承压下看中收修复。",
+    "中国平安 · 综合金融龙头，寿险改革进入收获期，权益市场回暖直接受益。",
+    "长江电力 · 水电压舱石，现金流稳如磐石，弱市里的避风港。",
+    "隆基绿能 · 光伏组件龙头，行业出清期，剩者为王看成本控制。",
+    "药明康德 · CXO 龙头，海外订单是晴雨表，地缘情绪扰动大。",
+    "美的集团 · 家电出海加机器人双引擎，分红慷慨，稳健型配置优选。",
+    "中际旭创 · 光模块核心，AI 算力基建最直接的受益者，紧盯北美云厂资本开支。",
+    "今日盘面 · 资金偏好高股息与绩优白马，题材快速轮动，切忌追高。",
+    "操作纪律 · 不押单一赛道，用仓位管理对抗未知，闲钱投资才睡得着。"
+  ]},
+  media: { icon:"★", title:"电影书籍 · 每日推荐", items:[
+    "电影 · 《星际穿越》—— 爱是唯一可以穿越时空的维度",
+    "书 · 《被讨厌的勇气》—— 课题分离，是自由的起点",
+    "纪录片 · 《人生七年》—— 把时间拉到最长，看一个人如何被生活塑形",
+    "电影 · 《海街日记》—— 慢下来，才能接住生活给的温柔",
+    "书 · 《悉达多》—— 人必须亲身走一遍，道理才成自己的",
+    "短片 · 《鹬》—— 11 分钟，讲完『勇敢是怕过之后的选择』",
+    "电影 · 《花样年华》—— 最克制的爱，是连手都没牵",
+    "书 · 《活着》—— 人是为了活着本身而活，不是为了活着之外的任何事",
+    "纪录片 · 《徒手攀岩》—— 把恐惧训练到麻木，是另一种勇敢",
+    "电影 · 《卧虎藏龙》—— 江湖之外，是每个人心里的那座山",
+    "书 · 《人类简史》—— 我们以为驯化了小麦，其实是小麦驯化了人",
+    "短片 · 《父与女》—— 8 分钟，讲完一生对父亲的等待"
+  ]},
+  english: { icon:"✦", title:"英语 · 每日 5 词（点 🔊 练听力）", items:[
+    {word:"achieve", phonetic:"/əˈtʃiːv/", meaning:"实现；取得", example:"She worked hard to achieve her goal.", scene:"描述努力达成目标。"},
+    {word:"afford", phonetic:"/əˈfɔːd/", meaning:"负担得起", example:"I can't afford a new phone right now.", scene:"谈论经济能力或取舍。"},
+    {word:"afraid", phonetic:"/əˈfreɪd/", meaning:"害怕的", example:"Don't be afraid of making mistakes.", scene:"鼓励他人别怕犯错。"},
+    {word:"agree", phonetic:"/əˈɡriː/", meaning:"同意；一致", example:"We all agree with the plan.", scene:"表达认同或达成共识。"},
+    {word:"allow", phonetic:"/əˈlaʊ/", meaning:"允许", example:"My parents allow me to stay up late.", scene:"谈论许可与规则。"},
+    {word:"appear", phonetic:"/əˈpɪə(r)/", meaning:"出现；似乎", example:"A smile appeared on her face.", scene:"描述表情出现或看起来怎样。"},
+    {word:"believe", phonetic:"/bɪˈliːv/", meaning:"相信", example:"I believe in you.", scene:"表达信任与支持。"},
+    {word:"breathe", phonetic:"/briːð/", meaning:"呼吸", example:"Breathe deeply and relax.", scene:"正念、放松时引导自己。"},
+    {word:"build", phonetic:"/bɪld/", meaning:"建造；建立", example:"They built a close friendship.", scene:"建立关系或事物。"},
+    {word:"calm", phonetic:"/kɑːm/", meaning:"平静的", example:"Take a deep breath and stay calm.", scene:"情绪平稳、不乱。"},
+    {word:"care", phonetic:"/keə(r)/", meaning:"关心；照顾", example:"I care about my family.", scene:"表达在乎与在乎的人。"},
+    {word:"catch", phonetic:"/kætʃ/", meaning:"抓住；赶上", example:"Hurry up or we'll miss the bus.", scene:"赶车或接住某物。"},
+    {word:"change", phonetic:"/tʃeɪndʒ/", meaning:"改变", example:"Change starts with small steps.", scene:"谈论改变与成长。"},
+    {word:"check", phonetic:"/tʃek/", meaning:"检查；核对", example:"Check your work before you send it.", scene:"提交前检查确认。"},
+    {word:"choose", phonetic:"/tʃuːz/", meaning:"选择", example:"Choose the path that fits you.", scene:"做选择或取舍。"},
+    {word:"collect", phonetic:"/kəˈlekt/", meaning:"收集", example:"She collects postcards from trips.", scene:"收集物品或回忆。"},
+    {word:"common", phonetic:"/ˈkɒmən/", meaning:"常见的；共同的", example:"It's a common mistake for beginners.", scene:"描述普遍现象。"},
+    {word:"compare", phonetic:"/kəmˈpeə(r)/", meaning:"比较", example:"Compare the two options carefully.", scene:"做对比权衡。"},
+    {word:"complete", phonetic:"/kəmˈpliːt/", meaning:"完成；完整的", example:"He completed the project on time.", scene:"完成任务时的用法。"},
+    {word:"consider", phonetic:"/kənˈsɪdə(r)/", meaning:"考虑", example:"Consider it carefully before deciding.", scene:"仔细考虑某事。"},
+    {word:"continue", phonetic:"/kənˈtɪnjuː/", meaning:"继续", example:"Continue your effort, you're close.", scene:"鼓励坚持。"},
+    {word:"control", phonetic:"/kənˈtrəʊl/", meaning:"控制", example:"Learn to control your temper.", scene:"控制情绪或局面。"},
+    {word:"create", phonetic:"/kriˈeɪt/", meaning:"创造", example:"Create something every day.", scene:"创作内容或新事物。"},
+    {word:"decide", phonetic:"/dɪˈsaɪd/", meaning:"决定", example:"Decide what matters most.", scene:"做决定时。"},
+    {word:"depend", phonetic:"/dɪˈpend/", meaning:"依赖；取决于", example:"It depends on the weather.", scene:"说明依赖的条件。"},
+    {word:"describe", phonetic:"/dɪˈskraɪb/", meaning:"描述", example:"Can you describe your dream?", scene:"描述人或事物。"},
+    {word:"develop", phonetic:"/dɪˈveləp/", meaning:"发展；培养", example:"Develop a good habit early.", scene:"培养习惯或能力。"},
+    {word:"discuss", phonetic:"/dɪˈskʌs/", meaning:"讨论", example:"Let's discuss the new idea.", scene:"讨论想法或方案。"},
+    {word:"discover", phonetic:"/dɪˈskʌvə(r)/", meaning:"发现", example:"Discover what you truly love.", scene:"发现兴趣或真相。"},
+    {word:"encourage", phonetic:"/ɪnˈkʌrɪdʒ/", meaning:"鼓励", example:"Friends encourage each other.", scene:"鼓励身边的人。"},
+    {word:"enjoy", phonetic:"/ɪnˈdʒɔɪ/", meaning:"享受", example:"Enjoy the little things in life.", scene:"享受生活的小确幸。"},
+    {word:"expect", phonetic:"/ɪkˈspekt/", meaning:"期待；预期", example:"I expect good news soon.", scene:"表达期待或预料。"},
+    {word:"explain", phonetic:"/ɪkˈspleɪn/", meaning:"解释", example:"Please explain your idea.", scene:"解释说明自己的想法。"},
+    {word:"express", phonetic:"/ɪkˈspres/", meaning:"表达", example:"Express your true feelings.", scene:"表达情感或观点。"},
+    {word:"follow", phonetic:"/ˈfɒləʊ/", meaning:"跟随；遵循", example:"Follow your heart.", scene:"遵循内心或指引。"},
+    {word:"forget", phonetic:"/fəˈɡet/", meaning:"忘记", example:"Don't forget to call mom.", scene:"提醒别忘记某事。"},
+    {word:"forgive", phonetic:"/fəˈɡɪv/", meaning:"原谅", example:"Forgive yourself and move on.", scene:"自我和解、放下。"},
+    {word:"grow", phonetic:"/ɡrəʊ/", meaning:"成长；增长", example:"Grow at your own pace.", scene:"个人成长或事物发展。"},
+    {word:"guide", phonetic:"/ɡaɪd/", meaning:"引导；指导", example:"Books can guide our thoughts.", scene:"指引方向或思路。"},
+    {word:"honest", phonetic:"/ˈɒnɪst/", meaning:"诚实的", example:"Be honest with yourself.", scene:"诚实待人待己。"},
+    {word:"hope", phonetic:"/həʊp/", meaning:"希望", example:"Never lose hope.", scene:"表达希望与坚持。"},
+    {word:"improve", phonetic:"/ɪmˈpruːv/", meaning:"改善；提高", example:"Improve a little each day.", scene:"每日进步一点点。"},
+    {word:"include", phonetic:"/ɪnˈkluːd/", meaning:"包括", example:"The plan includes a short break.", scene:"列举包含的内容。"},
+    {word:"increase", phonetic:"/ɪnˈkriːs/", meaning:"增加；提高", example:"Increase your focus each morning.", scene:"提升专注或数量。"},
+    {word:"learn", phonetic:"/lɜːn/", meaning:"学习", example:"Learn from your mistakes.", scene:"从错误中学习。"},
+    {word:"listen", phonetic:"/ˈlɪsn/", meaning:"倾听", example:"Listen to your heart.", scene:"倾听他人或内心。"},
+    {word:"manage", phonetic:"/ˈmænɪdʒ/", meaning:"管理；设法", example:"Manage your time wisely.", scene:"时间或事务管理。"},
+    {word:"notice", phonetic:"/ˈnəʊtɪs/", meaning:"注意到", example:"Notice the small joys around you.", scene:"留意生活中的美好。"},
+    {word:"offer", phonetic:"/ˈɒfə(r)/", meaning:"提供；提议", example:"Offer a helping hand.", scene:"主动提供帮助。"},
+    {word:"organize", phonetic:"/ˈɔːɡənaɪz/", meaning:"组织；整理", example:"Organize your desk each night.", scene:"整理环境或安排。"},
+    {word:"plan", phonetic:"/plæn/", meaning:"计划", example:"Plan your week ahead.", scene:"做计划与安排。"},
+    {word:"practice", phonetic:"/ˈpræktɪs/", meaning:"练习", example:"Practice makes perfect.", scene:"练习技能或语言。"},
+    {word:"prepare", phonetic:"/prɪˈpeə(r)/", meaning:"准备", example:"Prepare for tomorrow today.", scene:"为某事做准备。"},
+    {word:"protect", phonetic:"/prəˈtekt/", meaning:"保护", example:"Protect your inner peace.", scene:"保护内心平静或他人。"},
+    {word:"realize", phonetic:"/ˈriːəlaɪz/", meaning:"意识到", example:"Realize your own worth.", scene:"意识到价值或真相。"},
+    {word:"reduce", phonetic:"/rɪˈdjuːs/", meaning:"减少", example:"Reduce screen time before bed.", scene:"减少屏幕或消耗。"},
+    {word:"relax", phonetic:"/rɪˈlæks/", meaning:"放松", example:"Relax and recharge this weekend.", scene:"放松休息、充电。"},
+    {word:"remember", phonetic:"/rɪˈmembə(r)/", meaning:"记得", example:"Remember why you started.", scene:"记得初心或某事。"},
+    {word:"remind", phonetic:"/rɪˈmaɪnd/", meaning:"提醒", example:"Remind yourself to rest.", scene:"提醒自己或他人。"},
+    {word:"respect", phonetic:"/rɪˈspekt/", meaning:"尊重", example:"Respect your own limits.", scene:"尊重界限与他人。"},
+    {word:"share", phonetic:"/ʃeə(r)/", meaning:"分享", example:"Share your story with us.", scene:"分享经历或物品。"},
+    {word:"solve", phonetic:"/sɒlv/", meaning:"解决", example:"Solve one problem at a time.", scene:"逐步解决问题。"},
+    {word:"succeed", phonetic:"/səkˈsiːd/", meaning:"成功", example:"You will succeed if you keep going.", scene:"鼓励走向成功。"},
+    {word:"support", phonetic:"/səˈpɔːt/", meaning:"支持", example:"We support each other.", scene:"互相支持与陪伴。"},
+    {word:"trust", phonetic:"/trʌst/", meaning:"信任", example:"Trust the process.", scene:"信任过程或他人。"},
+    {word:"understand", phonetic:"/ˌʌndəˈstænd/", meaning:"理解", example:"Try to understand others.", scene:"理解他人立场。"},
+    {word:"value", phonetic:"/ˈvæljuː/", meaning:"重视；价值", example:"Value your time and energy.", scene:"珍惜价值与精力。"},
+    {word:"worry", phonetic:"/ˈwʌri/", meaning:"担心", example:"Don't worry too much about it.", scene:"安抚担忧的情绪。"},
+    {word:"worth", phonetic:"/wɜːθ/", meaning:"值得的", example:"It's worth the effort.", scene:"认为某事值得付出。"}
+  ]}
+};
+const PANEL_PICK = { douyin:6, xhs:6, emotion:8, stock:5, media:2, english:5 };
+const SEED_VER = 4;
+const PANEL_ORDER = ["douyin","xhs","emotion","stock","media","english"];
+
+// ---------- 数据存取（本地存储）----------
+function defaultBoard(){ return { custom: [], out: {}, days: {}, panels: {} }; }
+function getChecked(key){ return !!(board.days[ds] && board.days[ds][key]); }
+function setChecked(key, v){ board.days[ds] = board.days[ds] || {}; board.days[ds][key] = v; }
+function getOut(key, def){ return key[0] === 'd' ? (board.out[key] !== undefined ? board.out[key] : def) : def; }
+function setOut(key, v, def){ if (key[0] === 'd'){ if (v === def) delete board.out[key]; else board.out[key] = v; } }
+
+function loadBoard(){
+  try { board = JSON.parse(localStorage.getItem('kanban_board')) || defaultBoard(); }
+  catch(e){ board = defaultBoard(); }
+}
+function saveBoard(){ localStorage.setItem('kanban_board', JSON.stringify(board)); }
+function ensurePanels(){
+  let changed = false;
+  if ((board.seedVer || 0) < SEED_VER){
+    PANEL_ORDER.forEach(id => { board.panels[id] = { items: pickBatch(id), updated: null }; });
+    board.seedVer = SEED_VER; changed = true;
+  } else {
+    PANEL_ORDER.forEach(id => {
+      if (!board.panels[id] || !Array.isArray(board.panels[id].items) || board.panels[id].items.length === 0){
+        board.panels[id] = { items: pickBatch(id), updated: null };
+        changed = true;
+      }
+    });
+  }
+  return changed;
+}
+
+// ---------- 进度（圆形环）----------
+const RING_C = 2 * Math.PI * 44;
+const ringFg = document.querySelector('.ring-fg');
+const doneN = document.getElementById('doneN');
+const totalN = document.getElementById('totalN');
+function updateProgress(){
+  let outT = 0, outD = 0, inT = 0, inD = 0;
+  DEFAULT_TODOS.forEach((o,i) => {
+    if (!visibleToday(o)) return;
+    const k = 'd'+i, isOut = getOut(k, o.out), d = getChecked(k);
+    if (isOut){ outT++; if (d) outD++; } else { inT++; if (d) inD++; }
+  });
+  board.custom.forEach((t,i) => {
+    const k = 'c'+i, isOut = !!t.out, d = getChecked(k);
+    if (isOut){ outT++; if (d) outD++; } else { inT++; if (d) inD++; }
+  });
+  const ringTotal = viewMode === 'out' ? outT : inT;
+  const ringDone  = viewMode === 'out' ? outD : inD;
+  const pct = ringTotal ? ringDone / ringTotal : 0;
+  if (ringFg){ ringFg.style.strokeDasharray = RING_C; ringFg.style.strokeDashoffset = RING_C * (1 - pct); }
+  if (doneN) doneN.textContent = ringDone;
+  if (totalN) totalN.textContent = ringTotal;
+  const rw = document.querySelector('.ring-wrap'); if (rw) rw.classList.toggle('full', pct === 1 && ringTotal > 0);
+  const em = document.querySelector('.ring-label em'); if (em) em.textContent = pct === 1 ? '已全部完成' : (viewMode === 'out' ? '出门待办' : '在家待办');
+  const oc = document.getElementById('outCnt'); if (oc) oc.textContent = outD + '/' + outT;
+  const ic = document.getElementById('inCnt'); if (ic) ic.textContent = inD + '/' + inT;
+  const to2 = document.getElementById('tabOut'); if (to2) to2.textContent = outD + '/' + outT;
+  const ti2 = document.getElementById('tabIn'); if (ti2) ti2.textContent = inD + '/' + inT;
+}
+
+// ---------- 渲染待办（出门 / 在家）----------
+const todoOut = document.getElementById('todoOut');
+const todoIn = document.getElementById('todoIn');
+function renderTodos(){
+  todoOut.innerHTML = ''; todoIn.innerHTML = '';
+  let outN = 0, inN = 0;
+  DEFAULT_TODOS.forEach((o,i) => {
+    const muted = !visibleToday(o);
+    const k = 'd'+i, isOut = getOut(k, o.out);
+    if (isOut){ outN++; todoOut.appendChild(makeTodo(o, k, false, isOut, muted, outN)); }
+    else { inN++; todoIn.appendChild(makeTodo(o, k, false, isOut, muted, inN)); }
+  });
+  board.custom.forEach((t,i) => {
+    const k = 'c'+i;
+    (t.out ? todoOut : todoIn).appendChild(makeTodo({t:t.t, tag:'自定义'}, k, true, t.out));
+  });
+  updateProgress();
+  applyView();
+}
+
+const todoTabs = document.getElementById('todoTabs');
+function applyView(){
+  if (todoTabs) todoTabs.querySelectorAll('.tab').forEach(b => b.classList.toggle('active', b.dataset.v === viewMode));
+  document.querySelectorAll('.tgroup').forEach(g => g.classList.toggle('active', g.dataset.g === viewMode));
+}
+if (todoTabs) todoTabs.querySelectorAll('.tab').forEach(b => b.addEventListener('click', () => {
+  viewMode = b.dataset.v; localStorage.setItem('kanban_mode', viewMode); applyView(); updateProgress();
+}));
+function makeTodo(o, key, isCustom, outVal, muted, num){
+  const d = document.createElement('div');
+  d.className = 'todo' + (getChecked(key) ? ' done' : '') + (muted ? ' muted' : '');
+  if (num === undefined) num = isCustom ? '＋' : (parseInt(key.slice(1)) + 1);
+  d.innerHTML = '<div class="num">'+num+'</div><div class="box"></div>'
+    + '<div class="t" title="'+o.t+'">'+o.t+'</div>'
+    + (o.tag ? '<span class="tag">'+o.tag+'</span>' : '')
+    + (muted ? '<span class="notoday">今天不做</span>' : '')
+    + '<button class="outoggle" title="切换 出门 / 在家">'+(outVal ? '出' : '家')+'</button>'
+    + (isCustom ? '<button class="del" title="删除">×</button>' : '');
+  if (muted) return d;
+  d.querySelector('.box').addEventListener('click', () => {
+    const was = d.classList.contains('done');
+    d.classList.toggle('done');
+    const nowDone = d.classList.contains('done');
+    setChecked(key, nowDone);
+    saveBoard(); updateProgress();
+    if (nowDone && !was) playCoin();
+  });
+  d.querySelector('.outoggle').addEventListener('click', () => {
+    if (key[0] === 'd'){ const def = DEFAULT_TODOS[parseInt(key.slice(1))].out; setOut(key, !getOut(key, def), def); }
+    else { board.custom[parseInt(key.slice(1))].out = !board.custom[parseInt(key.slice(1))].out; }
+    saveBoard(); renderTodos();
+  });
+  if (isCustom) d.querySelector('.del').addEventListener('click', () => {
+    board.custom.splice(parseInt(key.slice(1)), 1);
+    saveBoard(); renderTodos();
+  });
+  return d;
+}
+
+// ---------- 添加待办 ----------
+const addBtn = document.getElementById('addBtn');
+const addForm = document.getElementById('addForm');
+const addInput = document.getElementById('addInput');
+const addOk = document.getElementById('addOk');
+const addNo = document.getElementById('addNo');
+addBtn.addEventListener('click', () => { addForm.style.display = 'flex'; addBtn.style.display = 'none'; addInput.focus(); });
+function commitAdd(){
+  const v = addInput.value.trim();
+  if (v){ board.custom.push({ t:v, out:false }); saveBoard(); renderTodos(); }
+  addInput.value = ''; addForm.style.display = 'none'; addBtn.style.display = 'inline-block';
+}
+addOk.addEventListener('click', commitAdd);
+addInput.addEventListener('keydown', e => { if (e.key === 'Enter') commitAdd(); });
+addNo.addEventListener('click', () => { addInput.value = ''; addForm.style.display = 'none'; addBtn.style.display = 'inline-block'; });
+
+// ---------- 渲染板块 ----------
+const pl = document.getElementById('panelList');
+let stockData = null; // 实时行情缓存
+
+function speak(text, lang){
+  try{
+    if (!('speechSynthesis' in window)) return;
+    speechSynthesis.cancel();
+    const u = new SpeechSynthesisUtterance(text);
+    u.lang = lang || 'en-US'; u.rate = 0.92; u.pitch = 1;
+    speechSynthesis.speak(u);
+  }catch(e){}
+}
+
+function pickBatch(id){
+  const lib = (PANEL_LIB[id] && PANEL_LIB[id].items) || [];
+  const n = PANEL_PICK[id] || 6;
+  const pool = lib.slice(); const out = [];
+  while (out.length < n && pool.length){
+    out.push(pool.splice(Math.floor(Math.random() * pool.length), 1)[0]);
+  }
+  return out;
+}
+
+// 股票实时行情（腾讯 gtimg JSONP，大陆可达，失败则仅显示内置分析）
+function loadStockLive(){
+  return new Promise((resolve) => {
+    const codes = ['sh600519','sz300750','sz002594','sh600036','sh601318','sh600900','sz000333','sz300308'];
+    const s = document.createElement('script');
+    const cbk = '__gt' + Date.now();
+    s.src = 'https://qt.gtimg.cn/q=' + codes.join(',') + '&_=' + Date.now();
+    let done = false;
+    const finish = () => { if (done) return; done = true; try{ s.remove(); }catch(e){} resolve(); };
+    s.onload = () => {
+      try{
+        const list = codes.map(code => {
+          const raw = (window['v_' + code] || '').replace(/^"|"$/g, '');
+          const p = raw.split('~');
+          const name = p[1] || code;
+          const price = parseFloat(p[3]);
+          const prev = parseFloat(p[4]);
+          const pct = (prev && !isNaN(price)) ? (price - prev) / prev * 100 : 0;
+          return { name, price: isNaN(price) ? '' : price, pct: +pct.toFixed(2) };
+        });
+        stockData = list;
+      }catch(e){ stockData = null; }
+      finish();
+    };
+    s.onerror = finish;
+    document.body.appendChild(s);
+    setTimeout(finish, 4000);
+  });
+}
+
+function loadPanel(id){
+  const p = board.panels[id];
+  if (p && Array.isArray(p.items) && p.items.length) return p;
+  return { items: pickBatch(id), updated: null };
+}
+function fmtTime(ts){ if (!ts) return '尚未更新'; const d = new Date(ts); return String(d.getHours()).padStart(2,'0') + ':' + String(d.getMinutes()).padStart(2,'0'); }
+
+function renderPanels(){
+  pl.innerHTML = '';
+  PANEL_ORDER.forEach(id => {
+    const seed = PANEL_LIB[id];
+    const data = loadPanel(id);
+    const c = document.createElement('div');
+    c.className = 'panel';
+    const h = document.createElement('h3');
+    const ic = document.createElement('span'); ic.className = 'ic'; ic.textContent = seed.icon;
+    h.appendChild(ic); h.appendChild(document.createTextNode(seed.title));
+    const ctrl = document.createElement('span'); ctrl.className = 'pctrl';
+    if (id !== 'english'){
+      const add = document.createElement('button'); add.className = 'padd'; add.textContent = '＋'; add.title = '添加条目';
+      add.addEventListener('click', () => {
+        const d = loadPanel(id);
+        d.items.push(id === 'stock' ? '新分析，点击编辑…' : '新条目，点击编辑…');
+        d.updated = Date.now(); board.panels[id] = d; saveBoard(); renderPanels();
+      });
+      ctrl.appendChild(add);
+    }
+    const ref = document.createElement('button'); ref.className = 'prefresh'; ref.textContent = '↻'; ref.title = '换一批新内容';
+    ctrl.appendChild(ref); h.appendChild(ctrl);
+    c.appendChild(h);
+    const up = document.createElement('div'); up.className = 'pupdated';
+    up.innerHTML = '更新于 <span data-up="'+id+'">'+fmtTime(data.updated)+'</span>';
+    c.appendChild(up);
+
+    if (id === 'english'){
+      const pall = document.createElement('button'); pall.className = 'pall'; pall.textContent = '▶ 播放全部'; pall.title = '朗读今日 5 个单词';
+      pall.addEventListener('click', () => speak(data.items.map(w => w.word + '. ' + w.example).join(' '), 'en-US'));
+      c.appendChild(pall);
+      const wrap = document.createElement('div'); wrap.className = 'words';
+      data.items.forEach((w) => wrap.appendChild(makeWordCard(w)));
+      c.appendChild(wrap);
+      pl.appendChild(c);
+      ref.addEventListener('click', async () => {
+        const d = loadPanel(id); d.items = pickBatch('english'); d.updated = Date.now();
+        board.panels[id] = d; saveBoard(); renderPanels();
+      });
+      return;
+    }
+
+    if (id === 'stock'){
+      if (stockData && stockData.length){
+        const live = document.createElement('div'); live.className = 'stocklive';
+        const lt = document.createElement('div'); lt.className = 'livetitle'; lt.textContent = '实时行情 · 沪深龙头';
+        live.appendChild(lt);
+        const row = document.createElement('div'); row.className = 'stockrow';
+        stockData.slice(0, 8).forEach(s => {
+          if (!s.price) return;
+          const up = parseFloat(s.pct) >= 0;
+          const el = document.createElement('span'); el.className = 'stk ' + (up ? 'up' : 'down');
+          el.innerHTML = s.name + ' <b>' + s.price + '</b> ' + (up ? '+' : '') + s.pct + '%';
+          row.appendChild(el);
+        });
+        live.appendChild(row); c.appendChild(live);
+      }
+      const disc = document.createElement('div'); disc.className = 'pdisc'; disc.textContent = '仅供学习参考 · 不构成投资建议';
+      c.appendChild(disc);
+      const box = document.createElement('div'); box.className = 'pitems';
+      data.items.forEach((txt, idx) => box.appendChild(makeItem(id, idx, txt)));
+      c.appendChild(box);
+      pl.appendChild(c);
+      ref.addEventListener('click', async () => {
+        await loadStockLive();
+        const d = loadPanel(id); d.items = pickBatch('stock'); d.updated = Date.now();
+        board.panels[id] = d; saveBoard(); renderPanels();
+      });
+      return;
+    }
+
+    const box = document.createElement('div'); box.className = 'pitems';
+    data.items.forEach((txt, idx) => box.appendChild(makeItem(id, idx, txt)));
+    c.appendChild(box);
+    pl.appendChild(c);
+    ref.addEventListener('click', async () => {
+      const d = loadPanel(id); d.items = pickBatch(id); d.updated = Date.now();
+      board.panels[id] = d; saveBoard(); renderPanels();
+    });
+  });
+}
+
+function makeItem(id, idx, txt){
+  const row = document.createElement('div');
+  row.className = 'pitem';
+  const p = document.createElement('p');
+  p.className = 'ptext'; p.contentEditable = 'true'; p.spellcheck = false; p.textContent = txt;
+  const del = document.createElement('button');
+  del.className = 'pdel'; del.title = '删除'; del.textContent = '×';
+  row.appendChild(p); row.appendChild(del);
+  p.addEventListener('blur', () => {
+    const d = loadPanel(id);
+    const v = p.textContent.trim();
+    const orig = d.items[idx];
+    if (v === ''){ if (orig !== undefined){ d.items.splice(idx, 1); d.updated = Date.now(); board.panels[id] = d; saveBoard(); renderPanels(); } return; }
+    if (v !== orig){ d.items[idx] = v; d.updated = Date.now(); board.panels[id] = d; saveBoard(); renderPanels(); }
+  });
+  del.addEventListener('click', () => {
+    const d = loadPanel(id); d.items.splice(idx, 1); d.updated = Date.now();
+    board.panels[id] = d; saveBoard(); renderPanels();
+  });
+  return row;
+}
+
+function makeWordCard(w){
+  const card = document.createElement('div'); card.className = 'word';
+  card.innerHTML = '<div class="wtop"><span class="wword">'+w.word+'</span>'
+    + '<span class="wph">'+w.phonetic+'</span>'
+    + '<button class="wspk" title="朗读单词与例句">🔊</button></div>'
+    + '<div class="wmean">'+w.meaning+'</div>'
+    + '<div class="wex">'+w.example+'</div>'
+    + '<div class="wsc">场景 · '+w.scene+'</div>';
+  card.querySelector('.wspk').addEventListener('click', () => speak(w.word + '. ' + w.example, 'en-US'));
+  return card;
+}
+
+// ---------- 登录 / 进入（免账号密码 · 本地口令校验）----------
+const overlay = document.getElementById('loginOverlay');
+const enterBtn = document.getElementById('enterBtn');
+const netnote = document.getElementById('netnote');
+const logoutBtn = document.getElementById('logoutBtn');
+
+const modeSel = document.getElementById('modeSel');
+function paintModeSel(){ if (!modeSel) return; modeSel.querySelectorAll('.mopt').forEach(b => b.classList.toggle('active', b.dataset.mode === viewMode)); }
+if (modeSel) modeSel.querySelectorAll('.mopt').forEach(b => b.addEventListener('click', () => {
+  viewMode = b.dataset.mode; localStorage.setItem('kanban_mode', viewMode); paintModeSel();
+}));
+paintModeSel();
+
+function setNet(msg){ if (netnote) netnote.textContent = msg; }
+function showApp(){ overlay.style.display = 'none'; logoutBtn.style.display = 'block'; }
+function showLogin(){ overlay.style.display = 'flex'; logoutBtn.style.display = 'none'; }
+
+const guardInput = document.getElementById('guardInput');
+const loginErr = document.getElementById('loginErr');
+if (guardInput){
+  guardInput.addEventListener('keydown', e => { if (e.key === 'Enter') quickEnter(); });
+  guardInput.addEventListener('focus', () => { if (loginErr) loginErr.textContent = ''; });
+}
+function quickEnter(){
+  const g = guardInput ? guardInput.value.trim() : '';
+  if (g !== GUARD){
+    if (loginErr) loginErr.textContent = '访问口令错误，请重新输入';
+    if (guardInput) guardInput.focus();
+    return;
+  }
+  localStorage.setItem('kanban_unlocked', '1');
+  enterApp();
+}
+enterBtn.addEventListener('click', quickEnter);
+
+logoutBtn.addEventListener('click', () => {
+  localStorage.removeItem('kanban_unlocked');
+  showLogin();
+});
+
+function enterApp(){
+  showApp();
+  loadBoard();
+  if (ensurePanels()) saveBoard();
+  renderTodos();
+  renderPanels();
+  loadStockLive().then(() => renderPanels());
+  setNet('已就绪 · 数据保存在本机浏览器');
+}
+
+// ---------- 启动 ----------
+(function init(){
+  if (localStorage.getItem('kanban_unlocked') === '1'){ enterApp(); return; }
+  showLogin();
+})();
+</script>
 </body>
 </html>
