@@ -157,6 +157,33 @@ header .sub{position:relative;color:var(--muted);font-size:12.5px;margin-top:8px
 .stk.up{color:#c0392b} /* 涨 · 红 */
 .stk.down{color:#1e8449} /* 跌 · 绿 */
 .pdisc{font-size:10.5px;color:#b9ad97;margin:-2px 0 8px;letter-spacing:.5px}
+/* 链接型条目（抖音/小红书） */
+.pitem.link{cursor:pointer;border-radius:8px}
+.pitem.link .ptext{color:#5a5246}
+.pitem.link .pext{margin-left:auto;flex:0 0 auto;color:var(--accent);font-size:12px;opacity:.55;align-self:center;white-space:nowrap}
+.pitem.link:hover{background:var(--accent-soft)}
+.pitem.link .pdel{opacity:0;position:absolute;right:6px;top:6px}
+.pitem.link:hover .pdel{opacity:.55}
+/* 股票卡片 */
+.stcard{position:relative;background:#FBF1E2;border:1px solid var(--line);border-radius:10px;padding:10px 12px;margin-bottom:8px;transition:.15s}
+.stcard:hover{background:#f6e7cf;box-shadow:0 4px 12px rgba(120,95,50,.1)}
+.stmain{display:block;text-decoration:none;color:inherit}
+.stmain:hover .stname{color:var(--accent)}
+.stcard .sthead{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.stname{font-size:14px;font-weight:600;color:var(--ink)}
+.stheat{font-size:11px;color:#fff;background:var(--accent);padding:1px 8px;border-radius:12px;white-space:nowrap}
+.starrow{margin-left:auto;color:var(--accent);font-size:12px;white-space:nowrap}
+.stnote{font-size:12.5px;color:#6B6253;margin-top:5px;line-height:1.55}
+.stmeta{font-size:11px;color:var(--muted);margin-top:4px}
+.stmeta.up{color:#c0392b}.stmeta.down{color:#1e8449}
+.stkdel{position:absolute;top:5px;right:7px;opacity:0;background:none;border:none;cursor:pointer;font-size:17px;color:#b9ad97;line-height:1;padding:0 2px;z-index:2}
+.stcard:hover .stkdel{opacity:.55}
+.stkdel:hover{opacity:1;color:#b5524a}
+.stguba{color:var(--accent);text-decoration:none}
+.stguba:hover{text-decoration:underline}
+/* 板块级入口链接 */
+.hotlink{display:inline-flex;align-items:center;gap:4px;font-size:11.5px;color:var(--accent);background:var(--accent-soft);border:1px solid var(--line);padding:4px 10px;border-radius:14px;margin:0 6px 10px 0;cursor:pointer;text-decoration:none;transition:.2s}
+.hotlink:hover{background:var(--accent);color:#fff}
 </style>
 </head>
 <body>
@@ -339,49 +366,49 @@ function visibleToday(o){
 
 // ---------- 板块灵感库（内置高质量内容，刷新可换一批；英语为结构化单词）----------
 const PANEL_LIB = {
-  douyin: { icon:"▶", title:"抖音 · 情感视频选题灵感", items:[
-    "深夜电台体 · 关灯只留一盏暖光，念『我们没说出口的那句晚安』，BGM 用环境白噪",
-    "错位蒙太奇 · 同一句『我很好』，cut 成出租屋 / 天台 / 医院三个场景，最后定格在空椅子",
-    "城市夜行 vlog · 末班地铁加便利店关东煮，旁白写『这座城很吵，但我很轻』",
-    "物件叙事 · 一只旧打火机、一张过期电影票，带出一段没说完的话",
-    "留白结尾 · 不解释结局，3 秒空镜加字幕『后来我学会了沉默』",
-    "逆光剪影 · 背对镜头走远，只用脚步声和一句『走了』收尾",
-    "第一视角独白 · 对着镜头说『今天，我又把想说的话咽了回去』",
-    "对比蒙太奇 · 去年今天的你对比现在的你，字幕『时间没说话，却什么都改了』",
-    "雨声疗愈 · 窗边雨夜加手写一封信，不寄出，念给旧时光听",
-    "电梯独白 · 在回家路上突然红了眼眶，10 秒长镜不切",
-    "翻聊天记录 · 快速掠过又停在某句，配『原来最远的，是已读不回』",
-    "旧歌新唱 · 用吉他清唱一首老情歌，字幕写你是哪一年循环过它",
-    "备忘录朗读 · 读一段写给自己却没发出去的狠话或软话",
-    "公交车窗景 · 把脸贴在玻璃上，看路灯拉成线，旁白『我在追赶什么』",
-    "分手物品 · 打包一件对方落下的东西，轻轻放门口，门铃不按",
-    "影子戏 · 只用台灯和墙上的影子演一段告别",
-    "早餐独白 · 一个人煮咖啡，念『两个人的习惯，要多久才能改回一个人』",
-    "深夜便利店 · 关东煮的热气加一句『长大就是把委屈就着饭吃了』",
-    "旧照片翻页 · 每张停留 2 秒，最后一张是空白，字幕『后面的故事，我还没敢拍』",
-    "便签墙 · 把写满心事的便利贴一张张撕下丢进垃圾桶，配一声轻叹"
+  douyin: { icon:"▶", title:"抖音 · 情感视频选题（点开看热门词条）", items:[
+    {t:"深夜电台体 · 关灯只留一盏暖光，念『我们没说出口的那句晚安』，BGM 用环境白噪", kw:"深夜情感语录"},
+    {t:"错位蒙太奇 · 同一句『我很好』，cut 成出租屋 / 天台 / 医院三个场景，最后定格在空椅子", kw:"情感短句"},
+    {t:"城市夜行 vlog · 末班地铁加便利店关东煮，旁白写『这座城很吵，但我很轻』", kw:"城市夜行vlog"},
+    {t:"物件叙事 · 一只旧打火机、一张过期电影票，带出一段没说完的话", kw:"怀旧情感"},
+    {t:"留白结尾 · 不解释结局，3 秒空镜加字幕『后来我学会了沉默』", kw:"治愈系文案"},
+    {t:"逆光剪影 · 背对镜头走远，只用脚步声和一句『走了』收尾", kw:"分手治愈"},
+    {t:"第一视角独白 · 对着镜头说『今天，我又把想说的话咽了回去』", kw:"emo文案"},
+    {t:"对比蒙太奇 · 去年今天的你对比现在的你，字幕『时间没说话，却什么都改了』", kw:"时间文案"},
+    {t:"雨声疗愈 · 窗边雨夜加手写一封信，不寄出，念给旧时光听", kw:"雨声疗愈"},
+    {t:"电梯独白 · 在回家路上突然红了眼眶，10 秒长镜不切", kw:"成年人崩溃瞬间"},
+    {t:"翻聊天记录 · 快速掠过又停在某句，配『原来最远的，是已读不回』", kw:"已读不回"},
+    {t:"旧歌新唱 · 用吉他清唱一首老情歌，字幕写你是哪一年循环过它", kw:"老歌翻唱"},
+    {t:"备忘录朗读 · 读一段写给自己却没发出去的狠话或软话", kw:"备忘录文案"},
+    {t:"公交车窗景 · 把脸贴在玻璃上，看路灯拉成线，旁白『我在追赶什么』", kw:"孤独感vlog"},
+    {t:"分手物品 · 打包一件对方落下的东西，轻轻放门口，门铃不按", kw:"分手物品"},
+    {t:"影子戏 · 只用台灯和墙上的影子演一段告别", kw:"影子戏短片"},
+    {t:"早餐独白 · 一个人煮咖啡，念『两个人的习惯，要多久才能改回一个人』", kw:"一个人生活"},
+    {t:"深夜便利店 · 关东煮的热气加一句『长大就是把委屈就着饭吃了』", kw:"长大文案"},
+    {t:"旧照片翻页 · 每张停留 2 秒，最后一张是空白，字幕『后面的故事，我还没敢拍』", kw:"旧照片回忆"},
+    {t:"便签墙 · 把写满心事的便利贴一张张撕下丢进垃圾桶，配一声轻叹", kw:"心事便利贴"}
   ]},
-  xhs: { icon:"❀", title:"小红书 · 每日热门主题", items:[
-    "钝感力练习 · 把『他是不是讨厌我』的脑内小剧场一键静音",
-    "一个人住的第 N 天 · 用暖光加香薰加一本摊开的书，把出租屋养出『家』的气味",
-    "情绪断舍离 · 删掉那几个让你半夜失眠的对话框，截图留念再删",
-    "周末充电清单 · 看展加散步加不回工作消息（附手绘路线）",
-    "自我对话日记 · 今天我对自己说了一句好话：『你已经很努力了』",
-    "低物欲的一周 · 不买新衣，把旧衣服穿出三种搭法",
-    "独处仪式感 · 周五晚泡澡加面膜加一部老电影，手机静音",
-    "允许自己丧 · 今天没动力就躺着，不责怪不打卡，休息也是进度",
-    "情绪记账本 · 记录每次崩溃的诱因，月底发现八成是没睡好",
-    "5 分钟正念 · 等电梯时数呼吸，把焦虑摁回肚子里",
-    "朋友圈分组实验 · 只发给自己看的那条，是写给未来的信",
-    "戒掉『应该』 · 把『我应该更优秀』换成『我现在这样就够』",
-    "数字极简 · 取关 30 个让你焦虑的账号，信息流突然安静",
-    "身体诚实法 · 失眠就起来写，不强迫睡，和黑夜和解",
-    "小确幸收集 · 今天的三件好事：晒到的太阳、好吃的饭、一个微笑",
-    "边界感练习 · 对消耗你的人说『这次我先照顾自己』",
-    "复盘不内耗 · 写『今天我做对的一件事』，而不是只盯错",
-    "感官重启 · 赤脚踩草地、闻雨后泥土，把麻木的神经唤醒",
-    "给三年后的信 · 写『别急，你当时担心的，现在都过去了』",
-    "今晚允许 · 允许哭、允许不想说话、允许明天再说"
+  xhs: { icon:"❀", title:"小红书 · 每日热门主题（点开看热搜）", items:[
+    {t:"钝感力练习 · 把『他是不是讨厌我』的脑内小剧场一键静音", kw:"钝感力"},
+    {t:"一个人住的第 N 天 · 用暖光加香薰加一本摊开的书，把出租屋养出『家』的气味", kw:"一个人住"},
+    {t:"情绪断舍离 · 删掉那几个让你半夜失眠的对话框，截图留念再删", kw:"情绪断舍离"},
+    {t:"周末充电清单 · 看展加散步加不回工作消息（附手绘路线）", kw:"周末充电清单"},
+    {t:"自我对话日记 · 今天我对自己说了一句好话：『你已经很努力了』", kw:"自我对话日记"},
+    {t:"低物欲的一周 · 不买新衣，把旧衣服穿出三种搭法", kw:"低物欲生活"},
+    {t:"独处仪式感 · 周五晚泡澡加面膜加一部老电影，手机静音", kw:"独处仪式感"},
+    {t:"允许自己丧 · 今天没动力就躺着，不责怪不打卡，休息也是进度", kw:"允许自己丧"},
+    {t:"情绪记账本 · 记录每次崩溃的诱因，月底发现八成是没睡好", kw:"情绪记账本"},
+    {t:"5 分钟正念 · 等电梯时数呼吸，把焦虑摁回肚子里", kw:"5分钟正念"},
+    {t:"朋友圈分组实验 · 只发给自己看的那条，是写给未来的信", kw:"朋友圈分组"},
+    {t:"戒掉『应该』 · 把『我应该更优秀』换成『我现在这样就够』", kw:"停止内耗"},
+    {t:"数字极简 · 取关 30 个让你焦虑的账号，信息流突然安静", kw:"数字极简"},
+    {t:"身体诚实法 · 失眠就起来写，不强迫睡，和黑夜和解", kw:"失眠自愈"},
+    {t:"小确幸收集 · 今天的三件好事：晒到的太阳、好吃的饭、一个微笑", kw:"小确幸收集"},
+    {t:"边界感练习 · 对消耗你的人说『这次我先照顾自己』", kw:"边界感"},
+    {t:"复盘不内耗 · 写『今天我做对的一件事』，而不是只盯错", kw:"每日复盘"},
+    {t:"感官重启 · 赤脚踩草地、闻雨后泥土，把麻木的神经唤醒", kw:"感官重启"},
+    {t:"给三年后的信 · 写『别急，你当时担心的，现在都过去了』", kw:"写给三年后的自己"},
+    {t:"今晚允许 · 允许哭、允许不想说话、允许明天再说", kw:"自我接纳"}
   ]},
   emotion: { icon:"✎", title:"情感 · 直击人心的短句", items:[
     "你是我未完待续的章节。",
@@ -415,19 +442,19 @@ const PANEL_LIB = {
     "有些人出现在你生命里，只为教你学会放手。",
     "愿你我，都被温柔以待；若不能，至少自己待自己温柔。"
   ]},
-  stock: { icon:"↗", title:"股票 · 龙头走向与盘面", items:[
-    "贵州茅台 · 高端白酒龙头，品牌护城河极深，回调看量能，长线逻辑未破。",
-    "宁德时代 · 动力电池一哥，出海与储能双线，关注上游锂价与产能利用率。",
-    "比亚迪 · 整车加电池垂直整合，全球化提速，留意海外交付节奏与新车型催化。",
-    "招商银行 · 零售标杆，资产质量稳健，息差承压下看中收修复。",
-    "中国平安 · 综合金融龙头，寿险改革进入收获期，权益市场回暖直接受益。",
-    "长江电力 · 水电压舱石，现金流稳如磐石，弱市里的避风港。",
-    "隆基绿能 · 光伏组件龙头，行业出清期，剩者为王看成本控制。",
-    "药明康德 · CXO 龙头，海外订单是晴雨表，地缘情绪扰动大。",
-    "美的集团 · 家电出海加机器人双引擎，分红慷慨，稳健型配置优选。",
-    "中际旭创 · 光模块核心，AI 算力基建最直接的受益者，紧盯北美云厂资本开支。",
-    "今日盘面 · 资金偏好高股息与绩优白马，题材快速轮动，切忌追高。",
-    "操作纪律 · 不押单一赛道，用仓位管理对抗未知，闲钱投资才睡得着。"
+  stock: { icon:"↗", title:"股票 · 热门龙头分析（点开看深度）", items:[
+    {name:"贵州茅台", code:"600519", market:"sh", heat:"机构重仓·北向爱股", note:"白酒一哥，品牌就是护城河。小白理解：它卖的不只是酒，是面子。长线逻辑没破，但单价高、波动小，适合拿得住的人，别追高。"},
+    {name:"宁德时代", code:"300750", market:"sz", heat:"机构抱团·新能源核心", note:"动力电池一哥，出海+储能双线。小白理解：电动车越多它越香。盯上游锂价和产能利用率，波动大、弹性也大。"},
+    {name:"比亚迪", code:"002594", market:"sz", heat:"散户人气王", note:"整车+电池垂直整合，全球化提速。小白理解：自己造电池自己造车，成本低。留意海外交付节奏和新车催化。"},
+    {name:"招商银行", code:"600036", market:"sh", heat:"机构稳健首选", note:"零售银行标杆，资产质量稳。小白理解：最会赚普通人钱的银行。息差承压时看中收修复，稳健型配置优选。"},
+    {name:"中国平安", code:"601318", market:"sh", heat:"险资重仓", note:"综合金融龙头，寿险改革进收获期。小白理解：保险+银行+投资三合一。股市回暖它直接受益，分红也稳。"},
+    {name:"长江电力", code:"600900", market:"sh", heat:"稳健压舱石", note:"水电压舱石，现金流稳如磐石。小白理解：旱涝保收的现金牛，弱市里的避风港，适合求稳的人。"},
+    {name:"隆基绿能", code:"601012", market:"sh", heat:"机构分歧大", note:"光伏组件龙头，行业正在出清。小白理解：淘汰赛进行中，剩者为王看成本控制。短线波动大，别重仓赌。"},
+    {name:"药明康德", code:"603259", market:"sh", heat:"北向重仓·波动大", note:"CXO 医药研发外包龙头，海外订单是晴雨表。小白理解：帮全球药企做研发。地缘情绪扰动大，适合能扛波动的人。"},
+    {name:"美的集团", code:"000333", market:"sz", heat:"外资长线", note:"家电出海+机器人双引擎，分红慷慨。小白理解：不止会造空调，还在搞机器人与工业。稳健型配置优选。"},
+    {name:"中际旭创", code:"300308", market:"sz", heat:"AI算力人气王", note:"光模块核心，AI 算力基建最直接的受益者。小白理解：AI 数据中心要它家的『光模块』传数据。紧盯北美云厂资本开支，弹性极大。"},
+    {note:"今日盘面：资金偏爱高股息+绩优白马，题材快速轮动，千万别追高。用闲钱、控仓位，才睡得着。"},
+    {note:"新手口诀：不懂不买、不押单一赛道、不借钱投资。点开任意龙头，看机构与散户实时讨论和推荐。"}
   ]},
   media: { icon:"★", title:"电影书籍 · 每日推荐", items:[
     "电影 · 《星际穿越》—— 爱是唯一可以穿越时空的维度",
@@ -515,8 +542,8 @@ const PANEL_LIB = {
     {word:"worth", phonetic:"/wɜːθ/", meaning:"值得的", example:"It's worth the effort.", scene:"认为某事值得付出。"}
   ]}
 };
-const PANEL_PICK = { douyin:6, xhs:6, emotion:8, stock:5, media:2, english:5 };
-const SEED_VER = 4;
+const PANEL_PICK = { douyin:6, xhs:6, emotion:8, stock:6, media:2, english:5 };
+const SEED_VER = 6;
 const PANEL_ORDER = ["douyin","xhs","emotion","stock","media","english"];
 
 // ---------- 数据存取（本地存储）----------
@@ -654,7 +681,8 @@ addNo.addEventListener('click', () => { addInput.value = ''; addForm.style.displ
 
 // ---------- 渲染板块 ----------
 const pl = document.getElementById('panelList');
-let stockData = null; // 实时行情缓存
+let stockData = null; // 实时行情缓存（数组，按 STOCK_CODES 顺序）
+let stockMap = {};    // 实时行情缓存（按 code 索引，含换手率/涨跌%）
 
 function speak(text, lang){
   try{
@@ -677,26 +705,42 @@ function pickBatch(id){
 }
 
 // 股票实时行情（腾讯 gtimg JSONP，大陆可达，失败则仅显示内置分析）
+const STOCK_CODES = [
+  {code:'sh600519', market:'sh', num:'600519'},
+  {code:'sz300750', market:'sz', num:'300750'},
+  {code:'sz002594', market:'sz', num:'002594'},
+  {code:'sh600036', market:'sh', num:'600036'},
+  {code:'sh601318', market:'sh', num:'601318'},
+  {code:'sh600900', market:'sh', num:'600900'},
+  {code:'sh601012', market:'sh', num:'601012'},
+  {code:'sh603259', market:'sh', num:'603259'},
+  {code:'sz000333', market:'sz', num:'000333'},
+  {code:'sz300308', market:'sz', num:'300308'}
+];
 function loadStockLive(){
   return new Promise((resolve) => {
-    const codes = ['sh600519','sz300750','sz002594','sh600036','sh601318','sh600900','sz000333','sz300308'];
     const s = document.createElement('script');
-    const cbk = '__gt' + Date.now();
-    s.src = 'https://qt.gtimg.cn/q=' + codes.join(',') + '&_=' + Date.now();
+    s.src = 'https://qt.gtimg.cn/q=' + STOCK_CODES.map(c => c.code).join(',') + '&_=' + Date.now();
     let done = false;
     const finish = () => { if (done) return; done = true; try{ s.remove(); }catch(e){} resolve(); };
     s.onload = () => {
       try{
-        const list = codes.map(code => {
-          const raw = (window['v_' + code] || '').replace(/^"|"$/g, '');
+        stockMap = {};
+        STOCK_CODES.forEach(c => {
+          const raw = (window['v_' + c.code] || '').replace(/^"|"$/g, '');
           const p = raw.split('~');
-          const name = p[1] || code;
           const price = parseFloat(p[3]);
-          const prev = parseFloat(p[4]);
-          const pct = (prev && !isNaN(price)) ? (price - prev) / prev * 100 : 0;
-          return { name, price: isNaN(price) ? '' : price, pct: +pct.toFixed(2) };
+          const pct = parseFloat(p[31]);
+          const turn = parseFloat(p[38]);
+          stockMap[c.code] = {
+            code: c.code, market: c.market, num: c.num,
+            name: p[1] || c.code,
+            price: isNaN(price) ? '' : price,
+            pct: isNaN(pct) ? 0 : pct,
+            turn: isNaN(turn) ? null : turn
+          };
         });
-        stockData = list;
+        stockData = STOCK_CODES.map(c => stockMap[c.code]).filter(Boolean);
       }catch(e){ stockData = null; }
       finish();
     };
@@ -728,7 +772,9 @@ function renderPanels(){
       const add = document.createElement('button'); add.className = 'padd'; add.textContent = '＋'; add.title = '添加条目';
       add.addEventListener('click', () => {
         const d = loadPanel(id);
-        d.items.push(id === 'stock' ? '新分析，点击编辑…' : '新条目，点击编辑…');
+        if (id === 'douyin' || id === 'xhs') d.items.push({ t:'新条目，点击编辑…', kw:'热门' });
+        else if (id === 'stock') d.items.push({ note:'新分析笔记，点击编辑…' });
+        else d.items.push('新条目，点击编辑…');
         d.updated = Date.now(); board.panels[id] = d; saveBoard(); renderPanels();
       });
       ctrl.appendChild(add);
@@ -758,7 +804,7 @@ function renderPanels(){
     if (id === 'stock'){
       if (stockData && stockData.length){
         const live = document.createElement('div'); live.className = 'stocklive';
-        const lt = document.createElement('div'); lt.className = 'livetitle'; lt.textContent = '实时行情 · 沪深龙头';
+        const lt = document.createElement('div'); lt.className = 'livetitle'; lt.textContent = '实时行情 · 沪深龙头（点个股看深度分析）';
         live.appendChild(lt);
         const row = document.createElement('div'); row.className = 'stockrow';
         stockData.slice(0, 8).forEach(s => {
@@ -770,15 +816,42 @@ function renderPanels(){
         });
         live.appendChild(row); c.appendChild(live);
       }
-      const disc = document.createElement('div'); disc.className = 'pdisc'; disc.textContent = '仅供学习参考 · 不构成投资建议';
+      // 板块级入口：实时快讯 / 股吧讨论(多人推荐) / 人气榜
+      const links = document.createElement('div');
+      [['📰 实时快讯','https://kuaixun.eastmoney.com/'],
+       ['💬 股吧讨论(多人推荐)','https://guba.eastmoney.com/'],
+       ['🔥 人气榜','https://data.eastmoney.com/zjlx/']].forEach(([t,u]) => {
+        const a = document.createElement('a'); a.className = 'hotlink'; a.href = u; a.target = '_blank'; a.rel = 'noopener'; a.textContent = t;
+        links.appendChild(a);
+      });
+      c.appendChild(links);
+      const disc = document.createElement('div'); disc.className = 'pdisc'; disc.textContent = '小白友好解读 · 点卡片看机构深度分析，点💬看股友实时讨论 · 仅供学习，不构成投资建议';
       c.appendChild(disc);
       const box = document.createElement('div'); box.className = 'pitems';
-      data.items.forEach((txt, idx) => box.appendChild(makeItem(id, idx, txt)));
+      data.items.forEach((it, idx) => box.appendChild(makeStockCard(id, idx, it)));
       c.appendChild(box);
       pl.appendChild(c);
       ref.addEventListener('click', async () => {
         await loadStockLive();
         const d = loadPanel(id); d.items = pickBatch('stock'); d.updated = Date.now();
+        board.panels[id] = d; saveBoard(); renderPanels();
+      });
+      return;
+    }
+
+    if (id === 'douyin' || id === 'xhs'){
+      const links = document.createElement('div');
+      const u = id === 'douyin' ? 'https://www.douyin.com/hot' : 'https://www.xiaohongshu.com/explore';
+      const a = document.createElement('a'); a.className = 'hotlink'; a.href = u; a.target = '_blank'; a.rel = 'noopener';
+      a.textContent = '🔥 看' + (id === 'douyin' ? '抖音' : '小红书') + '热搜榜';
+      links.appendChild(a);
+      c.appendChild(links);
+      const box = document.createElement('div'); box.className = 'pitems';
+      data.items.forEach((it, idx) => box.appendChild(makeTopicCard(id, idx, it)));
+      c.appendChild(box);
+      pl.appendChild(c);
+      ref.addEventListener('click', async () => {
+        const d = loadPanel(id); d.items = pickBatch(id); d.updated = Date.now();
         board.panels[id] = d; saveBoard(); renderPanels();
       });
       return;
@@ -826,6 +899,77 @@ function makeWordCard(w){
     + '<div class="wex">'+w.example+'</div>'
     + '<div class="wsc">场景 · '+w.scene+'</div>';
   card.querySelector('.wspk').addEventListener('click', () => speak(w.word + '. ' + w.example, 'en-US'));
+  return card;
+}
+
+// 抖音/小红书：点击关键词跳转平台热搜词条
+function makeTopicCard(id, idx, item){
+  const row = document.createElement('div'); row.className = 'pitem link';
+  const p = document.createElement('p'); p.className = 'ptext'; p.contentEditable = 'true'; p.spellcheck = false;
+  p.textContent = (item && item.t) ? item.t : '';
+  row.appendChild(p);
+  const kw = (item && item.kw) ? item.kw : '热门';
+  const ext = document.createElement('a'); ext.className = 'pext'; ext.textContent = '🔥 看#' + kw + '#热搜';
+  ext.href = id === 'douyin'
+    ? 'https://www.douyin.com/search/' + encodeURIComponent(kw)
+    : 'https://www.xiaohongshu.com/search_result?keyword=' + encodeURIComponent(kw);
+  ext.target = '_blank'; ext.rel = 'noopener';
+  ext.addEventListener('click', (e) => e.stopPropagation());
+  row.appendChild(ext);
+  const del = document.createElement('button'); del.className = 'pdel'; del.textContent = '×'; del.title = '删除';
+  row.appendChild(del);
+  p.addEventListener('blur', () => {
+    const d = loadPanel(id); const v = p.textContent.trim();
+    if (v === ''){ d.items.splice(idx, 1); }
+    else { if (!d.items[idx] || typeof d.items[idx] === 'string') d.items[idx] = { t:'', kw:kw }; d.items[idx].t = v; }
+    d.updated = Date.now(); board.panels[id] = d; saveBoard(); renderPanels();
+  });
+  del.addEventListener('click', () => { const d = loadPanel(id); d.items.splice(idx, 1); d.updated = Date.now(); board.panels[id] = d; saveBoard(); renderPanels(); });
+  return row;
+}
+
+// 股票：小白友好分析卡，点击跳东方财富深度分析 + 股吧讨论
+function makeStockCard(id, idx, item){
+  if (!item || !item.name){
+    const row = document.createElement('div'); row.className = 'pitem';
+    const p = document.createElement('p'); p.className = 'ptext'; p.contentEditable = 'true'; p.spellcheck = false;
+    p.textContent = (item && item.note) ? item.note : '';
+    const del = document.createElement('button'); del.className = 'pdel'; del.textContent = '×'; del.title = '删除';
+    row.appendChild(p); row.appendChild(del);
+    p.addEventListener('blur', () => {
+      const d = loadPanel(id); const v = p.textContent.trim();
+      if (v === ''){ d.items.splice(idx, 1); } else { d.items[idx] = { note:v }; }
+      d.updated = Date.now(); board.panels[id] = d; saveBoard(); renderPanels();
+    });
+    del.addEventListener('click', () => { const d = loadPanel(id); d.items.splice(idx, 1); d.updated = Date.now(); board.panels[id] = d; saveBoard(); renderPanels(); });
+    return row;
+  }
+  const card = document.createElement('div'); card.className = 'stcard';
+  const del = document.createElement('button'); del.className = 'stkdel'; del.textContent = '×'; del.title = '删除';
+  card.appendChild(del);
+  const main = document.createElement('a'); main.className = 'stmain';
+  main.href = 'https://quote.eastmoney.com/' + item.market + item.code + '.html';
+  main.target = '_blank'; main.rel = 'noopener';
+  const head = document.createElement('div'); head.className = 'sthead';
+  const nm = document.createElement('span'); nm.className = 'stname';
+  nm.textContent = item.name + ' (' + item.market.toUpperCase() + item.code + ')';
+  head.appendChild(nm);
+  if (item.heat){ const hb = document.createElement('span'); hb.className = 'stheat'; hb.textContent = item.heat; head.appendChild(hb); }
+  const arr = document.createElement('span'); arr.className = 'starrow'; arr.textContent = '📈 深度分析 ›';
+  head.appendChild(arr);
+  main.appendChild(head);
+  const note = document.createElement('div'); note.className = 'stnote'; note.textContent = item.note;
+  main.appendChild(note);
+  card.appendChild(main);
+  const meta = document.createElement('div'); meta.className = 'stmeta';
+  const key = item.market + item.code;
+  const lv = stockMap[key];
+  let liveTxt = '';
+  if (lv && lv.price){ const up = parseFloat(lv.pct) >= 0; meta.classList.add(up ? 'up' : 'down'); liveTxt = '实时 ' + lv.price + '  ' + (up ? '+' : '') + lv.pct + '%'; }
+  else liveTxt = '点📈看实时行情';
+  meta.innerHTML = liveTxt + ' · <a href="https://guba.eastmoney.com/list,' + item.market + item.code + '.html" target="_blank" rel="noopener" class="stguba">💬 股吧讨论(多人推荐)</a>';
+  card.appendChild(meta);
+  del.addEventListener('click', (e) => { e.preventDefault(); e.stopPropagation(); const d = loadPanel(id); d.items.splice(idx, 1); d.updated = Date.now(); board.panels[id] = d; saveBoard(); renderPanels(); });
   return card;
 }
 
