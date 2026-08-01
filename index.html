@@ -248,6 +248,15 @@ header .sub{position:relative;color:var(--muted);font-size:12.5px;margin-top:8px
 .hotlink{display:inline-flex;align-items:center;gap:4px;font-size:11.5px;color:var(--accent);background:var(--accent-soft);border:1px solid var(--line);padding:4px 10px;border-radius:14px;margin:0 6px 10px 0;cursor:pointer;text-decoration:none;transition:.2s}
 .hotlink:hover{background:var(--accent);color:#fff}
 .plabel{font-size:11px;color:var(--muted);letter-spacing:1px;margin:2px 0 4px}
+/* 我的账号 */
+.acctip{font-size:11px;color:var(--muted);margin:-4px 0 10px;line-height:1.6}
+.accrow{display:flex;align-items:center;gap:8px;margin:0 0 9px;flex-wrap:wrap}
+.acclab{font-size:12px;color:var(--accent);min-width:48px;font-weight:600}
+.accinp{flex:1;min-width:140px;font-size:12px;padding:7px 10px;border:1px solid var(--line);border-radius:10px;background:var(--accent-soft);color:var(--text);outline:none}
+.accinp:focus{border-color:var(--accent)}
+.accopen,.accpub{font-size:11px;color:#fff;background:var(--accent);border:none;padding:7px 12px;border-radius:10px;cursor:pointer;text-decoration:none;white-space:nowrap}
+.accpub{background:var(--muted)}
+@media(max-width:600px){.accrow{gap:6px}.acclab{min-width:40px}.accinp{min-width:120px;font-size:13px}}
 </style>
 </head>
 <body>
@@ -329,6 +338,13 @@ header .sub{position:relative;color:var(--muted);font-size:12.5px;margin-top:8px
        <button class="ok" id="addOk">添加</button>
        <button class="no" id="addNo">取消</button>
      </div>
+   </section>
+
+   <section class="card" id="accountCard">
+     <h2 class="serif"><span class="zodiac">🔗</span> 我的账号</h2>
+     <div class="divider"></div>
+     <div class="acctip">保存你的抖音 / 小红书主页，一键跳转发布与查看（仅存本机浏览器，不上传、不联网）</div>
+     <div id="accountList"></div>
    </section>
 
    <section class="card">
@@ -535,7 +551,52 @@ const PANEL_LIB = {
     "你以为时间能治好一切，其实它只是让你习惯了带着伤走。",
     "最深的喜欢，是即便沉默，也觉得和你在一起刚刚好。",
     "你不是矫情，你只是比很多人更愿意诚实地面对自己的心。",
-    "后来你学会了把情绪调成静音，不是不想说，是说了也没用。"
+    "后来你学会了把情绪调成静音，不是不想说，是说了也没用。",
+    "你最该学会的，是在没人鼓掌的时候，也愿意为自己站起来。",
+    "所谓成长，是把『为什么是我』慢慢活成『原来如此』。",
+    "你总在等一个被认可的时刻，却忘了你早就够好了。",
+    "真正的孤独不是身边没人，是你终于看清了自己，却无人可说。",
+    "你越想证明给别人看，越容易弄丢那个本来就不错的自己。",
+    "很多时候你不是没选择，只是不敢为那个选择负责。",
+    "你以为你在等机会，其实机会在等一个准备好的你。",
+    "把自己照顾好，是一种很被低估的能力。",
+    "你不必活成谁眼里的『应该』，你只需要成为你自己。",
+    "那些让你辗转难眠的事，过几年回头看，大概都不值一提。",
+    "你害怕的不是失败，是失败后那个不像自己的自己。",
+    "真正成熟的人，是把情绪安顿好，再去解决问题。",
+    "你总是对别人有耐心，对自己却格外苛刻。",
+    "所谓底气，是摔过几次之后，还敢再试一次。",
+    "你不需要向谁交代你的人生，除了你自己。",
+    "慢一点没关系，但别在原地自我消耗太久。",
+    "你羡慕的光鲜背后，可能也藏着你不愿承受的代价。",
+    "接受自己平庸的那一刻，反而轻松了很多。",
+    "你反复比较，不是因为别人多好，是你还没认下自己的好。",
+    "你不必为了合群，把自己削成别人喜欢的形状。",
+    "你以为屏蔽了消息就安静了，其实吵的是心里那件事。",
+    "把精力花在能改变的事上，是对自己最大的温柔。",
+    "你不是不够努力，只是把力气用在了讨好上。",
+    "与自己和解，不是认输，是终于肯放过自己。",
+    "你总想等到『一切就绪』再开始，可生活从不发通知。",
+    "一个人吃饭、一个人走、一个人扛，也是一种本事。",
+    "你不必所有人都懂，有几个懂你的人就够了。",
+    "真正的自信，是即使被否定，也知道自己值几斤几两。",
+    "你焦虑的不是当下，是脑子里那个还没发生的灾难。",
+    "把自己重新养一遍，从好好吃饭、好好睡觉开始。",
+    "你不需要完美，你需要的是真实地活着。",
+    "有些答案不在别人嘴里，而在你安静下来的那一刻。",
+    "你越急着要结果，越容易忽略路上真正的自己。",
+    "所谓格局，是能把委屈咽下，也能把善意给出。",
+    "你不是没话题可聊，是你太久没和自己好好聊聊。",
+    "真正的强大，是允许自己脆弱，也允许自己停下来。",
+    "你总在追赶别人的节奏，却忘了自己的钟走得也不慢。",
+    "放下执念不是放弃，是给彼此都松一口气。",
+    "你值得被温柔对待，尤其是被你自己。",
+    "很多事不是想通了才做，是做着做着就想通了。",
+    "你不必活成谁的续集，你自己的故事还没写完。",
+    "安静不是无话可说，是终于学会了和自己相处。",
+    "你害怕改变，不是因为新环境不好，是怕再也回不到舒适区。",
+    "真正的朋友，是你狼狈时还愿意接你电话的人。",
+    "你的人生剧本，主角只能是你自己，别让别人抢了戏。"
   ]},
   stock: { icon:"↗", title:"股票 · 潜力股精选（非科技 · 附白话投资建议）", items:[
     {name:"珀莱雅", code:"603605", market:"sh", heat:"国货美妆龙头·高成长", note:"国货美妆一姐，靠大单品+线上运营穿越周期。小白理解：你刷到的那些国货彩妆爆款，它家是背后的赢家。投资建议：成长逻辑仍顺，但估值不便宜；回调分批、不追高，盯着电商大促数据再动。"},
@@ -572,12 +633,12 @@ const PANEL_LIB = {
 };
 const PANEL_PICK = { douyin:6, xhs:6, emotion:10, stock:5, media:3 };
 const STOCK_VER = 2; // 股票库改版：仅保留 5 只非科技潜力股，并接入小红书股票分析推荐
-const EMOTION_VER = 4; // 情感短句库再扩充 10 条（共 61）；并支持每日自动更新新短语
+const EMOTION_VER = 5; // 情感短句库扩充至 106 条（新增自我思考/共鸣向）；每日自动更新新短语保持
 const SEED_VER = 6;
 const PANEL_ORDER = ["douyin","xhs","emotion","stock","media"];
 
 // ---------- 数据存取（本地存储）----------
-function defaultBoard(){ return { custom: [], out: {}, days: {}, panels: {} }; }
+function defaultBoard(){ return { custom: [], out: {}, days: {}, panels: {}, accounts: { douyin:'', xhs:'' } }; }
 function getChecked(key){ return !!(board.days[ds] && board.days[ds][key]); }
 function setChecked(key, v){ board.days[ds] = board.days[ds] || {}; board.days[ds][key] = v; }
 function getOut(key, def){ return key[0] === 'd' ? (board.out[key] !== undefined ? board.out[key] : def) : def; }
@@ -958,6 +1019,32 @@ function renderPanels(){
   });
 }
 
+// 我的账号：保存抖音/小红书主页，一键跳转（仅本机，不上传）
+function renderAccounts(){
+  const wrap = document.getElementById('accountList');
+  if (!wrap) return;
+  wrap.innerHTML = '';
+  const acc = board.accounts || (board.accounts = { douyin:'', xhs:'' });
+  const defs = [
+    { key:'douyin', name:'抖音', pub:'https://www.douyin.com/upload', ph:'粘贴你的抖音主页链接，如 https://www.douyin.com/user/...' },
+    { key:'xhs', name:'小红书', pub:'https://creator.xiaohongshu.com/publish/publish', ph:'粘贴你的小红书主页链接，如 https://www.xiaohongshu.com/user/profile/...' }
+  ];
+  defs.forEach(d => {
+    const row = document.createElement('div'); row.className = 'accrow';
+    const lab = document.createElement('span'); lab.className = 'acclab'; lab.textContent = d.name;
+    const inp = document.createElement('input'); inp.className = 'accinp'; inp.type = 'text'; inp.placeholder = d.ph; inp.value = acc[d.key] || '';
+    const save = () => { acc[d.key] = inp.value.trim(); saveBoard(); };
+    inp.addEventListener('blur', save);
+    inp.addEventListener('keydown', e => { if (e.key === 'Enter'){ save(); inp.blur(); } });
+    const open = document.createElement('a'); open.className = 'accopen'; open.textContent = '打开'; open.target = '_blank'; open.rel = 'noopener';
+    open.href = acc[d.key] || '#';
+    open.addEventListener('click', e => { if (!acc[d.key]){ e.preventDefault(); inp.focus(); } });
+    const pub = document.createElement('a'); pub.className = 'accpub'; pub.textContent = '去发布'; pub.href = d.pub; pub.target = '_blank'; pub.rel = 'noopener';
+    row.appendChild(lab); row.appendChild(inp); row.appendChild(open); row.appendChild(pub);
+    wrap.appendChild(row);
+  });
+}
+
 function makeItem(id, idx, txt){
   const row = document.createElement('div');
   row.className = 'pitem';
@@ -1097,6 +1184,7 @@ function enterApp(){
   if (ensurePanels()) saveBoard();
   renderTodos();
   renderPanels();
+  renderAccounts();
   loadStockLive().then(() => renderPanels());
   setNet('已就绪 · 数据保存在本机浏览器');
 }
