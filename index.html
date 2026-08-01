@@ -171,6 +171,30 @@ header .sub{position:relative;color:var(--muted);font-size:12.5px;margin-top:8px
   .words{gap:8px}
   .word{padding:10px 11px}
   .wword{font-size:14px}
+  /* 触屏没有 hover：删除按钮改为常显，才能点得到 */
+  .pitem .pdel{opacity:.55}
+  .stkdel{opacity:.5;font-size:16px}
+  /* 实时行情竖向铺开，价格一眼可读 */
+  .stockrow{flex-direction:column;align-items:stretch;gap:6px}
+  .stk{display:block;width:100%;text-align:left;font-size:12px}
+  .stnote{line-height:1.6}
+  .livetitle{margin-bottom:6px}
+  .stmeta{font-size:11px}
+}
+@media(max-width:400px){
+  header h1{font-size:20px;letter-spacing:1px}
+  .card{padding:18px 12px;margin-bottom:14px}
+  .card h2{font-size:16px;letter-spacing:1px}
+  .panel{padding:14px 11px}
+  .panel h3{font-size:13.5px}
+  .ptext{font-size:13.5px;line-height:1.6}
+  .todo .t{font-size:14px}
+  .tab{font-size:12px;letter-spacing:2px}
+  .ghead{font-size:11px;letter-spacing:2px}
+  .hotlink,.plabel{font-size:10px}
+  .stcard{padding:9px 10px}
+  .stname{font-size:13px}
+  .pctrl button{width:26px;height:26px}
 }
 
 /* 英语单词卡 */
@@ -486,21 +510,36 @@ const PANEL_LIB = {
     "所谓成熟，是把那句『凭什么』咽回去，换成轻轻的『算了』。",
     "好消息是：你不必被所有人喜欢；坏消息是，你花了很久才接受。",
     "你最该靠近的，是那个在你崩溃时，还愿意拉自己一把的自己。",
-    "慢一点没关系，只要你还在往自己想去的方向走。"
+    "慢一点没关系，只要你还在往自己想去的方向走。",
+    "你不是突然不爱了，你是攒够了每一次失望。",
+    "有些人把『我养你』说成了情话，最后却变成了你不敢离开的理由。",
+    "你越懂事，别人越觉得你不需要被照顾。",
+    "真正的和解，不是原谅了谁，是终于不再拿别人的错惩罚自己。",
+    "你拼命证明自己值得，其实你生来就值得，不需要任何人的盖章。",
+    "最累的陪伴，是你在努力靠近，对方却连伸手都嫌麻烦。",
+    "你把爱好藏得太深，深到连自己都忘了曾经眼里有光。",
+    "别怕慢，怕的是你停在原地，还骗自己说在等时机。",
+    "你反复讨好的人，可能从头到尾都没把你当回事。",
+    "承认『我过得不好』，比假装『我很好』需要更多勇气。",
+    "你不是没人爱，是你把爱都给了那个看不见你的人。",
+    "有些伤口不喊疼，不是因为它不痛，是你已经习惯了自己舔。",
+    "真正被爱的样子，是你狼狈的时候，也有人愿意接住。",
+    "你终会明白，离开一段消耗你的关系，不是失去，是自救。",
+    "把期待放在自己身上，比放在任何人身上都稳。"
   ]},
-  stock: { icon:"↗", title:"股票 · 热门龙头分析（点开看深度）", items:[
-    {name:"贵州茅台", code:"600519", market:"sh", heat:"机构重仓·北向爱股", note:"白酒一哥，品牌就是护城河。小白理解：它卖的不只是酒，是面子。长线逻辑没破，但单价高、波动小，适合拿得住的人，别追高。"},
-    {name:"宁德时代", code:"300750", market:"sz", heat:"机构抱团·新能源核心", note:"动力电池一哥，出海+储能双线。小白理解：电动车越多它越香。盯上游锂价和产能利用率，波动大、弹性也大。"},
-    {name:"比亚迪", code:"002594", market:"sz", heat:"散户人气王", note:"整车+电池垂直整合，全球化提速。小白理解：自己造电池自己造车，成本低。留意海外交付节奏和新车催化。"},
-    {name:"招商银行", code:"600036", market:"sh", heat:"机构稳健首选", note:"零售银行标杆，资产质量稳。小白理解：最会赚普通人钱的银行。息差承压时看中收修复，稳健型配置优选。"},
-    {name:"中国平安", code:"601318", market:"sh", heat:"险资重仓", note:"综合金融龙头，寿险改革进收获期。小白理解：保险+银行+投资三合一。股市回暖它直接受益，分红也稳。"},
-    {name:"长江电力", code:"600900", market:"sh", heat:"稳健压舱石", note:"水电压舱石，现金流稳如磐石。小白理解：旱涝保收的现金牛，弱市里的避风港，适合求稳的人。"},
-    {name:"隆基绿能", code:"601012", market:"sh", heat:"机构分歧大", note:"光伏组件龙头，行业正在出清。小白理解：淘汰赛进行中，剩者为王看成本控制。短线波动大，别重仓赌。"},
-    {name:"药明康德", code:"603259", market:"sh", heat:"北向重仓·波动大", note:"CXO 医药研发外包龙头，海外订单是晴雨表。小白理解：帮全球药企做研发。地缘情绪扰动大，适合能扛波动的人。"},
-    {name:"美的集团", code:"000333", market:"sz", heat:"外资长线", note:"家电出海+机器人双引擎，分红慷慨。小白理解：不止会造空调，还在搞机器人与工业。稳健型配置优选。"},
-    {name:"中际旭创", code:"300308", market:"sz", heat:"AI算力人气王", note:"光模块核心，AI 算力基建最直接的受益者。小白理解：AI 数据中心要它家的『光模块』传数据。紧盯北美云厂资本开支，弹性极大。"},
-    {note:"今日盘面：资金偏爱高股息+绩优白马，题材快速轮动，千万别追高。用闲钱、控仓位，才睡得着。"},
-    {note:"新手口诀：不懂不买、不押单一赛道、不借钱投资。点开任意龙头，看机构与散户实时讨论和推荐。"}
+  stock: { icon:"↗", title:"股票 · 潜力股挖掘（附白话投资建议）", items:[
+    {name:"贵州茅台", code:"600519", market:"sh", heat:"核心资产·品牌护城河", note:"白酒一哥，品牌即护城河。小白理解：卖的不只是酒，是面子。投资建议：长线优质标的，但单价高、波动小，适合拿得住的人；别追高，等回调分批更稳。"},
+    {name:"长江电力", code:"600900", market:"sh", heat:"稳健压舱石", note:"水电压舱石，现金流稳如磐石。小白理解：旱涝保收的现金牛。投资建议：弱市避风港，求稳可当底仓；收益弹性不大，别指望暴富。"},
+    {name:"招商银行", code:"600036", market:"sh", heat:"机构稳健首选", note:"零售银行标杆，资产质量稳。小白理解：最会赚普通人钱的银行。投资建议：稳健型配置优选，看中收修复与分红，适合长期拿着吃息。"},
+    {name:"中际旭创", code:"300308", market:"sz", heat:"AI算力弹性王", note:"光模块核心，AI 基建最直接的受益者。小白理解：AI 数据中心靠它家的『光模块』传数据。投资建议：高弹性高波动，只适合小仓位博弹性；紧盯北美云厂资本开支，破位要止损。"},
+    {name:"新易盛", code:"300502", market:"sz", heat:"光模块潜力黑马", note:"800G/1.6T 光模块新锐，业绩弹性大。小白理解：和旭创同赛道的『潜力股』。投资建议：成长空间大但波动惊人，建议小仓分批，绝不一次满仓。"},
+    {name:"寒武纪", code:"688256", market:"sh", heat:"国产AI芯片核心", note:"国产算力芯片代表，政策与自主可控双驱动。小白理解：AI 的『中国芯』希望。投资建议：故事大、波动更大，纯主题博弈；只拿闲钱的小部分，设硬止损。"},
+    {name:"兆易创新", code:"603986", market:"sh", heat:"存储+MCU龙头", note:"NOR 闪存与 MCU 双线，受益半导体周期回暖。小白理解：手机电脑里的『记忆芯片』。投资建议：周期反转逻辑，逢低布局，别在暴涨后追。"},
+    {name:"恺英网络", code:"002517", market:"sz", heat:"游戏低估潜力", note:"游戏出海+小程序游戏放量，估值偏低。小白理解：你手机里的小游戏可能就它家的。投资建议：业绩扎实、估值低，可作潜力配置；关注版号与新游节奏。"},
+    {name:"沪电股份", code:"002463", market:"sz", heat:"AI服务器PCB受益", note:"高端 PCB 供 AI 服务器，订单旺盛。小白理解：AI 服务器的『电路板』。投资建议：景气度高但周期属性强，回调分批更稳，警惕产能过剩。"},
+    {name:"中控技术", code:"688777", market:"sh", heat:"工业软件隐形冠军", note:"流程工业自动化与软件，国产替代主线。小白理解：工厂的『大脑系统』。投资建议：长坡厚雪赛道，适合中长期持有，短期看订单落地。"},
+    {note:"今日思路：资金更偏好有真实业绩的『潜力股』而非纯概念。闲钱、小仓、分散、设止损——这四件套比任何『内部消息』都靠谱。"},
+    {note:"新手口诀：不懂不买、不押单一赛道、不借钱投资。点开任意个股，看机构深度分析与股友实时讨论。"}
   ]},
   media: { icon:"★", title:"电影书籍 · 每日推荐", items:[
     "电影 · 《星际穿越》—— 爱是唯一可以穿越时空的维度",
@@ -514,84 +553,16 @@ const PANEL_LIB = {
     "纪录片 · 《徒手攀岩》—— 把恐惧训练到麻木，是另一种勇敢",
     "电影 · 《卧虎藏龙》—— 江湖之外，是每个人心里的那座山",
     "书 · 《人类简史》—— 我们以为驯化了小麦，其实是小麦驯化了人",
-    "短片 · 《父与女》—— 8 分钟，讲完一生对父亲的等待"
+    "短片 · 《父与女》—— 8 分钟，讲完一生对父亲的等待",
+    "电影 · 《瞬息全宇宙》—— 在无数平行宇宙里，最珍贵的还是这个不完美的家",
+    "书 · 《蛤蟆先生去看心理医生》—— 不是你病了，是你太久没好好照顾自己",
+    "纪录片 · 《地球脉动》—— 把镜头交给自然，你才会重新敬畏『活着』这件事"
   ]},
-  english: { icon:"✦", title:"英语 · 每日 5 词（点 🔊 练听力）", items:[
-    {word:"achieve", phonetic:"/əˈtʃiːv/", meaning:"实现；取得", example:"She worked hard to achieve her goal.", scene:"描述努力达成目标。"},
-    {word:"afford", phonetic:"/əˈfɔːd/", meaning:"负担得起", example:"I can't afford a new phone right now.", scene:"谈论经济能力或取舍。"},
-    {word:"afraid", phonetic:"/əˈfreɪd/", meaning:"害怕的", example:"Don't be afraid of making mistakes.", scene:"鼓励他人别怕犯错。"},
-    {word:"agree", phonetic:"/əˈɡriː/", meaning:"同意；一致", example:"We all agree with the plan.", scene:"表达认同或达成共识。"},
-    {word:"allow", phonetic:"/əˈlaʊ/", meaning:"允许", example:"My parents allow me to stay up late.", scene:"谈论许可与规则。"},
-    {word:"appear", phonetic:"/əˈpɪə(r)/", meaning:"出现；似乎", example:"A smile appeared on her face.", scene:"描述表情出现或看起来怎样。"},
-    {word:"believe", phonetic:"/bɪˈliːv/", meaning:"相信", example:"I believe in you.", scene:"表达信任与支持。"},
-    {word:"breathe", phonetic:"/briːð/", meaning:"呼吸", example:"Breathe deeply and relax.", scene:"正念、放松时引导自己。"},
-    {word:"build", phonetic:"/bɪld/", meaning:"建造；建立", example:"They built a close friendship.", scene:"建立关系或事物。"},
-    {word:"calm", phonetic:"/kɑːm/", meaning:"平静的", example:"Take a deep breath and stay calm.", scene:"情绪平稳、不乱。"},
-    {word:"care", phonetic:"/keə(r)/", meaning:"关心；照顾", example:"I care about my family.", scene:"表达在乎与在乎的人。"},
-    {word:"catch", phonetic:"/kætʃ/", meaning:"抓住；赶上", example:"Hurry up or we'll miss the bus.", scene:"赶车或接住某物。"},
-    {word:"change", phonetic:"/tʃeɪndʒ/", meaning:"改变", example:"Change starts with small steps.", scene:"谈论改变与成长。"},
-    {word:"check", phonetic:"/tʃek/", meaning:"检查；核对", example:"Check your work before you send it.", scene:"提交前检查确认。"},
-    {word:"choose", phonetic:"/tʃuːz/", meaning:"选择", example:"Choose the path that fits you.", scene:"做选择或取舍。"},
-    {word:"collect", phonetic:"/kəˈlekt/", meaning:"收集", example:"She collects postcards from trips.", scene:"收集物品或回忆。"},
-    {word:"common", phonetic:"/ˈkɒmən/", meaning:"常见的；共同的", example:"It's a common mistake for beginners.", scene:"描述普遍现象。"},
-    {word:"compare", phonetic:"/kəmˈpeə(r)/", meaning:"比较", example:"Compare the two options carefully.", scene:"做对比权衡。"},
-    {word:"complete", phonetic:"/kəmˈpliːt/", meaning:"完成；完整的", example:"He completed the project on time.", scene:"完成任务时的用法。"},
-    {word:"consider", phonetic:"/kənˈsɪdə(r)/", meaning:"考虑", example:"Consider it carefully before deciding.", scene:"仔细考虑某事。"},
-    {word:"continue", phonetic:"/kənˈtɪnjuː/", meaning:"继续", example:"Continue your effort, you're close.", scene:"鼓励坚持。"},
-    {word:"control", phonetic:"/kənˈtrəʊl/", meaning:"控制", example:"Learn to control your temper.", scene:"控制情绪或局面。"},
-    {word:"create", phonetic:"/kriˈeɪt/", meaning:"创造", example:"Create something every day.", scene:"创作内容或新事物。"},
-    {word:"decide", phonetic:"/dɪˈsaɪd/", meaning:"决定", example:"Decide what matters most.", scene:"做决定时。"},
-    {word:"depend", phonetic:"/dɪˈpend/", meaning:"依赖；取决于", example:"It depends on the weather.", scene:"说明依赖的条件。"},
-    {word:"describe", phonetic:"/dɪˈskraɪb/", meaning:"描述", example:"Can you describe your dream?", scene:"描述人或事物。"},
-    {word:"develop", phonetic:"/dɪˈveləp/", meaning:"发展；培养", example:"Develop a good habit early.", scene:"培养习惯或能力。"},
-    {word:"discuss", phonetic:"/dɪˈskʌs/", meaning:"讨论", example:"Let's discuss the new idea.", scene:"讨论想法或方案。"},
-    {word:"discover", phonetic:"/dɪˈskʌvə(r)/", meaning:"发现", example:"Discover what you truly love.", scene:"发现兴趣或真相。"},
-    {word:"encourage", phonetic:"/ɪnˈkʌrɪdʒ/", meaning:"鼓励", example:"Friends encourage each other.", scene:"鼓励身边的人。"},
-    {word:"enjoy", phonetic:"/ɪnˈdʒɔɪ/", meaning:"享受", example:"Enjoy the little things in life.", scene:"享受生活的小确幸。"},
-    {word:"expect", phonetic:"/ɪkˈspekt/", meaning:"期待；预期", example:"I expect good news soon.", scene:"表达期待或预料。"},
-    {word:"explain", phonetic:"/ɪkˈspleɪn/", meaning:"解释", example:"Please explain your idea.", scene:"解释说明自己的想法。"},
-    {word:"express", phonetic:"/ɪkˈspres/", meaning:"表达", example:"Express your true feelings.", scene:"表达情感或观点。"},
-    {word:"follow", phonetic:"/ˈfɒləʊ/", meaning:"跟随；遵循", example:"Follow your heart.", scene:"遵循内心或指引。"},
-    {word:"forget", phonetic:"/fəˈɡet/", meaning:"忘记", example:"Don't forget to call mom.", scene:"提醒别忘记某事。"},
-    {word:"forgive", phonetic:"/fəˈɡɪv/", meaning:"原谅", example:"Forgive yourself and move on.", scene:"自我和解、放下。"},
-    {word:"grow", phonetic:"/ɡrəʊ/", meaning:"成长；增长", example:"Grow at your own pace.", scene:"个人成长或事物发展。"},
-    {word:"guide", phonetic:"/ɡaɪd/", meaning:"引导；指导", example:"Books can guide our thoughts.", scene:"指引方向或思路。"},
-    {word:"honest", phonetic:"/ˈɒnɪst/", meaning:"诚实的", example:"Be honest with yourself.", scene:"诚实待人待己。"},
-    {word:"hope", phonetic:"/həʊp/", meaning:"希望", example:"Never lose hope.", scene:"表达希望与坚持。"},
-    {word:"improve", phonetic:"/ɪmˈpruːv/", meaning:"改善；提高", example:"Improve a little each day.", scene:"每日进步一点点。"},
-    {word:"include", phonetic:"/ɪnˈkluːd/", meaning:"包括", example:"The plan includes a short break.", scene:"列举包含的内容。"},
-    {word:"increase", phonetic:"/ɪnˈkriːs/", meaning:"增加；提高", example:"Increase your focus each morning.", scene:"提升专注或数量。"},
-    {word:"learn", phonetic:"/lɜːn/", meaning:"学习", example:"Learn from your mistakes.", scene:"从错误中学习。"},
-    {word:"listen", phonetic:"/ˈlɪsn/", meaning:"倾听", example:"Listen to your heart.", scene:"倾听他人或内心。"},
-    {word:"manage", phonetic:"/ˈmænɪdʒ/", meaning:"管理；设法", example:"Manage your time wisely.", scene:"时间或事务管理。"},
-    {word:"notice", phonetic:"/ˈnəʊtɪs/", meaning:"注意到", example:"Notice the small joys around you.", scene:"留意生活中的美好。"},
-    {word:"offer", phonetic:"/ˈɒfə(r)/", meaning:"提供；提议", example:"Offer a helping hand.", scene:"主动提供帮助。"},
-    {word:"organize", phonetic:"/ˈɔːɡənaɪz/", meaning:"组织；整理", example:"Organize your desk each night.", scene:"整理环境或安排。"},
-    {word:"plan", phonetic:"/plæn/", meaning:"计划", example:"Plan your week ahead.", scene:"做计划与安排。"},
-    {word:"practice", phonetic:"/ˈpræktɪs/", meaning:"练习", example:"Practice makes perfect.", scene:"练习技能或语言。"},
-    {word:"prepare", phonetic:"/prɪˈpeə(r)/", meaning:"准备", example:"Prepare for tomorrow today.", scene:"为某事做准备。"},
-    {word:"protect", phonetic:"/prəˈtekt/", meaning:"保护", example:"Protect your inner peace.", scene:"保护内心平静或他人。"},
-    {word:"realize", phonetic:"/ˈriːəlaɪz/", meaning:"意识到", example:"Realize your own worth.", scene:"意识到价值或真相。"},
-    {word:"reduce", phonetic:"/rɪˈdjuːs/", meaning:"减少", example:"Reduce screen time before bed.", scene:"减少屏幕或消耗。"},
-    {word:"relax", phonetic:"/rɪˈlæks/", meaning:"放松", example:"Relax and recharge this weekend.", scene:"放松休息、充电。"},
-    {word:"remember", phonetic:"/rɪˈmembə(r)/", meaning:"记得", example:"Remember why you started.", scene:"记得初心或某事。"},
-    {word:"remind", phonetic:"/rɪˈmaɪnd/", meaning:"提醒", example:"Remind yourself to rest.", scene:"提醒自己或他人。"},
-    {word:"respect", phonetic:"/rɪˈspekt/", meaning:"尊重", example:"Respect your own limits.", scene:"尊重界限与他人。"},
-    {word:"share", phonetic:"/ʃeə(r)/", meaning:"分享", example:"Share your story with us.", scene:"分享经历或物品。"},
-    {word:"solve", phonetic:"/sɒlv/", meaning:"解决", example:"Solve one problem at a time.", scene:"逐步解决问题。"},
-    {word:"succeed", phonetic:"/səkˈsiːd/", meaning:"成功", example:"You will succeed if you keep going.", scene:"鼓励走向成功。"},
-    {word:"support", phonetic:"/səˈpɔːt/", meaning:"支持", example:"We support each other.", scene:"互相支持与陪伴。"},
-    {word:"trust", phonetic:"/trʌst/", meaning:"信任", example:"Trust the process.", scene:"信任过程或他人。"},
-    {word:"understand", phonetic:"/ˌʌndəˈstænd/", meaning:"理解", example:"Try to understand others.", scene:"理解他人立场。"},
-    {word:"value", phonetic:"/ˈvæljuː/", meaning:"重视；价值", example:"Value your time and energy.", scene:"珍惜价值与精力。"},
-    {word:"worry", phonetic:"/ˈwʌri/", meaning:"担心", example:"Don't worry too much about it.", scene:"安抚担忧的情绪。"},
-    {word:"worth", phonetic:"/wɜːθ/", meaning:"值得的", example:"It's worth the effort.", scene:"认为某事值得付出。"}
-  ]}
 };
-const PANEL_PICK = { douyin:6, xhs:6, emotion:10, stock:6, media:2, english:5 };
-const EMOTION_VER = 2; // 情感短句库升级版本：升级后用更丰富、有共鸣的新内容替换
+const PANEL_PICK = { douyin:6, xhs:6, emotion:10, stock:6, media:3 };
+const EMOTION_VER = 3; // 情感短句库再次扩充：更丰富、更有共鸣，升级后刷新情感板块
 const SEED_VER = 6;
-const PANEL_ORDER = ["douyin","xhs","emotion","stock","media","english"];
+const PANEL_ORDER = ["douyin","xhs","emotion","stock","media"];
 
 // ---------- 数据存取（本地存储）----------
 function defaultBoard(){ return { custom: [], out: {}, days: {}, panels: {} }; }
@@ -787,15 +758,15 @@ function pickBatch(id){
 // 股票实时行情（腾讯 gtimg JSONP，大陆可达，失败则仅显示内置分析）
 const STOCK_CODES = [
   {code:'sh600519', market:'sh', num:'600519'},
-  {code:'sz300750', market:'sz', num:'300750'},
-  {code:'sz002594', market:'sz', num:'002594'},
-  {code:'sh600036', market:'sh', num:'600036'},
-  {code:'sh601318', market:'sh', num:'601318'},
   {code:'sh600900', market:'sh', num:'600900'},
-  {code:'sh601012', market:'sh', num:'601012'},
-  {code:'sh603259', market:'sh', num:'603259'},
-  {code:'sz000333', market:'sz', num:'000333'},
-  {code:'sz300308', market:'sz', num:'300308'}
+  {code:'sh600036', market:'sh', num:'600036'},
+  {code:'sz300308', market:'sz', num:'300308'},
+  {code:'sz300502', market:'sz', num:'300502'},
+  {code:'sh688256', market:'sh', num:'688256'},
+  {code:'sh603986', market:'sh', num:'603986'},
+  {code:'sz002517', market:'sz', num:'002517'},
+  {code:'sz002463', market:'sz', num:'002463'},
+  {code:'sh688777', market:'sh', num:'688777'}
 ];
 function loadStockLive(){
   return new Promise((resolve) => {
@@ -848,17 +819,15 @@ function renderPanels(){
     const ic = document.createElement('span'); ic.className = 'ic'; ic.textContent = seed.icon;
     h.appendChild(ic); h.appendChild(document.createTextNode(seed.title));
     const ctrl = document.createElement('span'); ctrl.className = 'pctrl';
-    if (id !== 'english'){
-      const add = document.createElement('button'); add.className = 'padd'; add.textContent = '＋'; add.title = '添加条目';
-      add.addEventListener('click', () => {
-        const d = loadPanel(id);
-        if (id === 'douyin' || id === 'xhs') d.items.push({ t:'新条目，点击编辑…', kw:'热门' });
-        else if (id === 'stock') d.items.push({ note:'新分析笔记，点击编辑…' });
-        else d.items.push('新条目，点击编辑…');
-        d.updated = Date.now(); board.panels[id] = d; saveBoard(); renderPanels();
-      });
-      ctrl.appendChild(add);
-    }
+    const add = document.createElement('button'); add.className = 'padd'; add.textContent = '＋'; add.title = '添加条目';
+    add.addEventListener('click', () => {
+      const d = loadPanel(id);
+      if (id === 'douyin' || id === 'xhs') d.items.push({ t:'新条目，点击编辑…', kw:'热门' });
+      else if (id === 'stock') d.items.push({ note:'新分析笔记，点击编辑…' });
+      else d.items.push('新条目，点击编辑…');
+      d.updated = Date.now(); board.panels[id] = d; saveBoard(); renderPanels();
+    });
+    ctrl.appendChild(add);
     const ref = document.createElement('button'); ref.className = 'prefresh'; ref.textContent = '↻'; ref.title = '换一批新内容';
     ctrl.appendChild(ref); h.appendChild(ctrl);
     c.appendChild(h);
@@ -866,25 +835,10 @@ function renderPanels(){
     up.innerHTML = '更新于 <span data-up="'+id+'">'+fmtTime(data.updated)+'</span>';
     c.appendChild(up);
 
-    if (id === 'english'){
-      const pall = document.createElement('button'); pall.className = 'pall'; pall.textContent = '▶ 播放全部'; pall.title = '朗读今日 5 个单词';
-      pall.addEventListener('click', () => speak(data.items.map(w => w.word + '. ' + w.example).join(' '), 'en-US'));
-      c.appendChild(pall);
-      const wrap = document.createElement('div'); wrap.className = 'words';
-      data.items.forEach((w) => wrap.appendChild(makeWordCard(w)));
-      c.appendChild(wrap);
-      pl.appendChild(c);
-      ref.addEventListener('click', async () => {
-        const d = loadPanel(id); d.items = pickBatch('english'); d.updated = Date.now();
-        board.panels[id] = d; saveBoard(); renderPanels();
-      });
-      return;
-    }
-
     if (id === 'stock'){
       if (stockData && stockData.length){
         const live = document.createElement('div'); live.className = 'stocklive';
-        const lt = document.createElement('div'); lt.className = 'livetitle'; lt.textContent = '实时行情 · 沪深龙头（点个股看深度分析）';
+        const lt = document.createElement('div'); lt.className = 'livetitle'; lt.textContent = '实时行情 · 沪深精选（点个股看深度分析）';
         live.appendChild(lt);
         const row = document.createElement('div'); row.className = 'stockrow';
         stockData.slice(0, 8).forEach(s => {
@@ -993,18 +947,6 @@ function makeItem(id, idx, txt){
     board.panels[id] = d; saveBoard(); renderPanels();
   });
   return row;
-}
-
-function makeWordCard(w){
-  const card = document.createElement('div'); card.className = 'word';
-  card.innerHTML = '<div class="wtop"><span class="wword">'+w.word+'</span>'
-    + '<span class="wph">'+w.phonetic+'</span>'
-    + '<button class="wspk" title="朗读单词与例句">🔊</button></div>'
-    + '<div class="wmean">'+w.meaning+'</div>'
-    + '<div class="wex">'+w.example+'</div>'
-    + '<div class="wsc">场景 · '+w.scene+'</div>';
-  card.querySelector('.wspk').addEventListener('click', () => speak(w.word + '. ' + w.example, 'en-US'));
-  return card;
 }
 
 // 抖音/小红书：点击关键词跳转平台热搜词条
