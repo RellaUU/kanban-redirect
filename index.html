@@ -133,6 +133,45 @@ header .sub{position:relative;color:var(--muted);font-size:12.5px;margin-top:8px
 .logout{position:fixed;top:14px;right:16px;font-size:12px;color:var(--muted);background:rgba(255,255,255,.6);border:1px solid var(--line);padding:5px 12px;border-radius:20px;cursor:pointer;z-index:40}
 @keyframes fadeUp{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
 @media(max-width:480px){header h1,.loginCard h1{font-size:20px;letter-spacing:1px}}
+/* ===== 手机端排版优化：更好的阅读与触控体验 ===== */
+@media(max-width:600px){
+  .wrap{padding:6px 13px 46px}
+  header{padding:34px 16px 22px}
+  header h1{font-size:22px;letter-spacing:1px}
+  .card{padding:20px 15px;margin-bottom:16px}
+  .card h2{font-size:17px;letter-spacing:2px}
+  .h2sub{font-size:11.5px}
+  .ring-wrap{margin:4px auto 16px}
+  .tabs{gap:10px;margin-bottom:12px}
+  .tab{padding:11px 0;font-size:13px}
+  .ghead{font-size:12px;letter-spacing:3px;margin:14px 2px 8px}
+  .todo{padding:13px 2px;align-items:flex-start}
+  .todo .t{white-space:normal;line-height:1.5;overflow:visible;text-overflow:clip}
+  .num{margin-top:3px}
+  .box{margin-top:3px}
+  .tag{font-size:10px;padding:2px 7px}
+  .addform{flex-direction:column;align-items:stretch}
+  .addform input{flex:1 1 auto;min-width:0;width:100%}
+  .addform .ok,.addform .no{width:100%}
+  .panel{padding:15px 13px}
+  .panel h3{font-size:14px}
+  .pctrl button{width:28px;height:28px}
+  .pitem{padding:9px 4px}
+  .ptext{font-size:14px;line-height:1.65}
+  .pupdated{font-size:10.5px}
+  .stocklive{padding:9px 10px;margin-bottom:9px}
+  .livetitle{font-size:10.5px}
+  .stk{font-size:11.5px;padding:3px 8px}
+  .stcard{padding:10px 11px}
+  .stname{font-size:13.5px}
+  .stnote{font-size:12px}
+  .hotlink{font-size:10.5px;padding:5px 9px;margin:0 6px 8px 0}
+  .plabel{font-size:10.5px}
+  .pdisc{font-size:10px}
+  .words{gap:8px}
+  .word{padding:10px 11px}
+  .wword{font-size:14px}
+}
 
 /* 英语单词卡 */
 .words{display:grid;grid-template-columns:1fr;gap:10px}
@@ -412,36 +451,42 @@ const PANEL_LIB = {
     {t:"今晚允许 · 允许哭、允许不想说话、允许明天再说", kw:"自我接纳"}
   ]},
   emotion: { icon:"✎", title:"情感 · 直击人心的短句", items:[
-    "你是我未完待续的章节。",
-    "后来啊，风很自由，你也很。",
-    "有些再见，是再也不见。",
-    "我藏起来的不是脾气，是不想被看穿的委屈。",
-    "成年人的体面，是连崩溃都挑时间。",
-    "我们都在用『没事』，敷衍所有『怎么了』。",
-    "遗憾是，明明还喜欢，却连问候都要排练。",
-    "有些人只适合住在回忆里，走出来就失真。",
-    "我把想念调成静音，怕它吵到你新的生活。",
-    "爱是常觉亏欠，不爱是常觉亏。",
-    "最深的孤独，是明明在人群里，却无人可说『我累了』。",
-    "你把温柔给了世界，却把脾气留给了最亲的人。",
-    "懂事的人，连难过都选在没人的时候。",
-    "原来『放下』不是忘记，是想起时不再皱眉。",
-    "我们终其一生，都在和童年的自己和解。",
-    "有些关心，迟到太久，就变成打扰。",
-    "你以为的『为你好』，有时是我的枷锁。",
-    "真正的安全感，是一个人也能把日子过稳。",
-    "别用沉默惩罚爱你的人，他们读不懂你的潜台词。",
-    "思念这种病，自愈不了，只能靠时间稀释。",
-    "我们都在扮演大人，偶尔才敢做回小孩。",
-    "最好的告别，是没有怨，只有一句『保重』。",
-    "你把心事写进备忘录，却从不敢点开那个人。",
-    "爱错人不可怕，可怕的是为他改掉了自己。",
-    "成年人的分手，往往没有争吵，只有沉默的疏离。",
-    "你不是不够好，只是没遇到同频的人。",
-    "孤独不是没人陪，是心里的话没有耳朵。",
-    "后来我明白，懂事是哭给自己听，笑给世界看。",
-    "有些人出现在你生命里，只为教你学会放手。",
-    "愿你我，都被温柔以待；若不能，至少自己待自己温柔。"
+    "你把『我没事』说得太熟练，以至于没人发现你其实有事。",
+    "真正的累，是心里塞满了话，却找不到一个能接住的人。",
+    "我们不是走散了，是在同一个屋檐下，慢慢活成了互不打扰的两个人。",
+    "你拼命想被理解，后来才懂：被允许不被理解，反而更轻松。",
+    "长大就是把委屈咽下去的速度，比小时候快了十倍。",
+    "有些关系不是不爱了，是都累了，谁也不肯先伸手。",
+    "你最温柔的样子，常常留给了陌生人，对最亲的人却只剩冷脸。",
+    "一个人也能把日子过稳，这件事你曾经以为自己做不到。",
+    "你以为在等一个解释，其实你只是在等自己愿意放过。",
+    "深夜的念头最诚实——白天你演得很好，夜里你全露了馅。",
+    "别把『懂事』当奖赏，它只是让你更早学会把难过藏好。",
+    "你没有变糟糕，你只是终于敢承认自己也会累。",
+    "那些没说出口的话，后来都长成了你性格里的某道坎。",
+    "你反复翻看聊天记录，不是放不下，是想弄清到底哪里出了错。",
+    "最舒服的关系，是不用找话题，沉默也不尴尬。",
+    "你总在等『合适的时候』开口，可有些话过了那个点，就再也说不出口。",
+    "真正的自由，是终于不再向每个人证明自己值得被爱。",
+    "你照顾了所有人的情绪，唯独把自己排在了最后。",
+    "长大后才明白，父母的『为你好』，有时只是他们自己的焦虑。",
+    "你把生活过成一张待办清单，却很久没为一件小事好好发呆了。",
+    "有些人不是你的遗憾，是你终于学会放下的那堂课。",
+    "你不需要变得更厉害才配被爱，你现在的样子，就有人接得住。",
+    "最无声的告别，是没有告别，只是慢慢不再出现在彼此的生活里。",
+    "你以为孤独是没人陪，后来发现，是心里那句话始终没有耳朵。",
+    "你一次次原谅，不是因为大方，是太怕那段关系真的结束。",
+    "真正的安全感，是卡里有余额、身后有退路、心里有底气。",
+    "你羡慕别人的松弛感，其实他们只是更早学会了对自己说『够了』。",
+    "别拿别人的剧本演自己的人生，落幕时你会认不出自己。",
+    "你等的那句『对不起』，对方可能一辈子都不会说，你也得学着往前走。",
+    "把期待调低一点，生活反而开始给你惊喜。",
+    "你不是玻璃心，你只是太认真地对待了每一段关系。",
+    "有些人出现在你生命里，不是为了留下，是为了替你上一课。",
+    "所谓成熟，是把那句『凭什么』咽回去，换成轻轻的『算了』。",
+    "好消息是：你不必被所有人喜欢；坏消息是，你花了很久才接受。",
+    "你最该靠近的，是那个在你崩溃时，还愿意拉自己一把的自己。",
+    "慢一点没关系，只要你还在往自己想去的方向走。"
   ]},
   stock: { icon:"↗", title:"股票 · 热门龙头分析（点开看深度）", items:[
     {name:"贵州茅台", code:"600519", market:"sh", heat:"机构重仓·北向爱股", note:"白酒一哥，品牌就是护城河。小白理解：它卖的不只是酒，是面子。长线逻辑没破，但单价高、波动小，适合拿得住的人，别追高。"},
@@ -543,7 +588,8 @@ const PANEL_LIB = {
     {word:"worth", phonetic:"/wɜːθ/", meaning:"值得的", example:"It's worth the effort.", scene:"认为某事值得付出。"}
   ]}
 };
-const PANEL_PICK = { douyin:6, xhs:6, emotion:8, stock:6, media:2, english:5 };
+const PANEL_PICK = { douyin:6, xhs:6, emotion:10, stock:6, media:2, english:5 };
+const EMOTION_VER = 2; // 情感短句库升级版本：升级后用更丰富、有共鸣的新内容替换
 const SEED_VER = 6;
 const PANEL_ORDER = ["douyin","xhs","emotion","stock","media","english"];
 
@@ -571,6 +617,12 @@ function ensurePanels(){
         changed = true;
       }
     });
+  }
+  // 情感短句库升级：仅刷新情感板块为新内容（不影响其它板块与你手动编辑的条目）
+  if ((board.emotionVer || 0) < EMOTION_VER){
+    board.panels.emotion = { items: pickBatch('emotion'), updated: null };
+    board.emotionVer = EMOTION_VER;
+    changed = true;
   }
   return changed;
 }
@@ -867,6 +919,17 @@ function renderPanels(){
         blinks.appendChild(a);
       });
       c.appendChild(blinks);
+      // 投资建议·白话版：普通人视角、易懂的投顾与理财入门（不构成投资建议）
+      const alabel = document.createElement('div'); alabel.className = 'plabel'; alabel.textContent = '💡 投资建议 · 白话版（普通人视角 · 不构成投资建议）';
+      c.appendChild(alabel);
+      const alinks = document.createElement('div');
+      [['🤝 且慢 · 普通人的基金投顾','https://www.qieman.com/'],
+       ['📗 简七理财 · 小白理财入门','https://www.jane7.com/'],
+       ['📊 天天基金 · 基金排行与定投','https://fund.eastmoney.com/']].forEach(([t,u]) => {
+        const a = document.createElement('a'); a.className = 'hotlink'; a.href = u; a.target = '_blank'; a.rel = 'noopener'; a.textContent = t;
+        alinks.appendChild(a);
+      });
+      c.appendChild(alinks);
       const disc = document.createElement('div'); disc.className = 'pdisc'; disc.textContent = '小白友好解读 · 点卡片看机构深度分析，点💬看股友实时讨论 · 新手先学再投，闲钱投资、不借钱、不追高';
       c.appendChild(disc);
       const box = document.createElement('div'); box.className = 'pitems';
